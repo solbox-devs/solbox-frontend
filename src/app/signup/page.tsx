@@ -1,7 +1,7 @@
-import logo from "@/assets/logo-1.png";
+import logo from "@/assets/banner.png";
 import SignupForm from "@/components/Signup/SignupForm";
 import { Box, Image, SimpleGrid } from "@chakra-ui/react";
-const WalletMainPage = () => {
+const SignupPage = () => {
   return (
     <Box
       display="flex"
@@ -21,12 +21,14 @@ const WalletMainPage = () => {
           display="flex"
           alignItems="center"
           justifyContent="center"
+          w="350px"
+          h="400px"
         >
-          <Image src={logo.src} alt="logo" />
+          <Image src={logo.src} alt="logo" w="100%" h="100%" />
         </Box>
       </SimpleGrid>
     </Box>
   );
 };
 
-export default WalletMainPage;
+export default SignupPage;

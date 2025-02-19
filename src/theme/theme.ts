@@ -62,19 +62,17 @@ const theme = extendTheme({
       variants: {
         primary: {
           field: {
-            backgroundColor: "#F3F3F30B",
-            fontFamily: "Work Sans",
-            borderRadius: "16px",
-            px: 5,
-            py: 7,
-            border: "2px solid rgba(255, 255, 255, 0.34)",
+            backgroundColor: "#FFFFFF1A",
+            fontSize: "14px",
+            borderRadius: "10px",
+            border: "1px solid rgba(255, 255, 255, 0.34)",
             outline: "none",
             _focus: {
               outline: "none",
-              border: "2px solid rgba(255, 255, 255, 0.34)",
+              border: "1px solid rgba(255, 255, 255, 0.34)",
             },
             _placeholder: {
-              color: "#FFFFFF4D",
+              color: "#F1F5F9",
             },
           },
         },

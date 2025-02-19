@@ -1,6 +1,8 @@
 import EarningHistory from "@/components/admin/EarningHistory";
 import Information from "@/components/admin/Information";
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import UsersTable from "@/components/admin/UsersTable";
+import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import { BsFillRocketTakeoffFill } from "react-icons/bs";
 
 const AdminMainPage = () => {
   return (
@@ -11,11 +13,77 @@ const AdminMainPage = () => {
       <Box my={2}>
         <Information />
       </Box>
-      <SimpleGrid my={4} columns={{ base: 1, md: 2 }} spacing={4}>
-        <Box flex={2}>
+      <SimpleGrid
+        my={4}
+        columns={{ base: 1, md: 2 }}
+        spacing={4}
+        gridTemplateColumns={{ base: "1fr", md: "2fr 1fr" }}
+      >
+        <Box>
           <EarningHistory />
+          <Box my={4}>
+            <UsersTable />
+          </Box>
         </Box>
-        <Box flex={1}>2</Box>
+        <Box h="100vh">
+          <Box w="full" p={4} bg="#262D33" borderRadius="md">
+            <Text fontSize="md" fontWeight={500} color="#FFFFFF">
+              Packages
+            </Text>
+            {Array(3)
+              .fill(null)
+              .map((item, idx) => {
+                return (
+                  <Box p={3} borderRadius="md" bg="#FFFFFF1A" key={idx} mb={5}>
+                    <Flex alignItems="center" justifyContent="space-between">
+                      <Box
+                        h={10}
+                        w={10}
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                        bg="#FFFFFF1A"
+                        boxShadow="md"
+                        borderRadius="md"
+                      >
+                        <BsFillRocketTakeoffFill fontSize={20} />
+                      </Box>
+                      <Box
+                        fontSize="sm"
+                        p={2}
+                        borderRadius="3xl"
+                        bg="#FFFFFF1A"
+                      >
+                        Stater Plan
+                      </Box>
+                    </Flex>
+                    <Box mt={2}>
+                      <Text fontSize="2xl" fontWeight={500}>
+                        0.5 SOL
+                      </Text>
+                      <Text fontSize="sm" fontWeight={400} color="#FAFAFA">
+                        Upto 3 direct connections (3*3 matrix referral)
+                      </Text>
+                    </Box>
+                    <Button
+                      borderRadius="3xl"
+                      bg="transparent"
+                      border="2px solid #FAFAFA"
+                      color="#FAFAFA"
+                      fontWeight="normal"
+                      w="100%"
+                      mt={2}
+                      _hover={{
+                        background: "transparent",
+                      }}
+                    >
+                      User Current Plan
+                    </Button>
+                  </Box>
+                );
+              })}
+          </Box>
+        </Box>
       </SimpleGrid>
     </Box>
   );
