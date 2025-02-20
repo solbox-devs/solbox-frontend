@@ -89,7 +89,7 @@ const ReferralTree = () => {
   };
 
   return (
-    <Box width="100%" height="500px" bg="gray.800" borderRadius="md" p={4}>
+    <Box width="100%" height="400px" bg="gray.800" borderRadius="md" p={4}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
