@@ -1,5 +1,5 @@
 "use client";
-import { SearchIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -8,10 +8,15 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Text,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { FaWallet } from "react-icons/fa";
-import { IoPersonCircleSharp } from "react-icons/io5";
+import { RiProfileFill } from "react-icons/ri";
 
 const TopBar = () => {
   return (
@@ -55,13 +60,22 @@ const TopBar = () => {
             </Button>
           </Box>
           <Box>
-            <Button
-              borderRadius="30px"
-              variant="secondary"
-              leftIcon={<IoPersonCircleSharp color="white" />}
-            >
-              Gojo Satoru
-            </Button>
+            <Menu>
+              <MenuButton
+                borderRadius="2xl"
+                as={Button}
+                leftIcon={<RiProfileFill />}
+                rightIcon={<ChevronDownIcon />}
+              >
+                Profile
+              </MenuButton>
+              <MenuList>
+                <Link href="/dashboard/profile" passHref>
+                  <MenuItem>Profile</MenuItem>
+                </Link>
+                <MenuItem>Create a Copy</MenuItem>
+              </MenuList>
+            </Menu>
           </Box>
         </HStack>
       </Flex>

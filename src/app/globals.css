@@ -24,3 +24,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background-color: #0b1217; /* Darker thumb color on hover */
 }
+.css-s5t7bz {
+  background-color: #363d43 !important;
+  --menu-bg: "none" !important;
+  border: none;
+}

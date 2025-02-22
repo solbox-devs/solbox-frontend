@@ -78,31 +78,31 @@ const Sidebar = () => {
           <SidebarItem
             label="Dashboard"
             icon={MdDashboardCustomize}
-            to="/admin"
+            to="/dashboard"
             onClose={onClose}
           />
           <SidebarItem
             label="Referrals Page"
             icon={FaTasks}
-            to="/admin/referral"
+            to="/dashboard/referral"
             onClose={onClose}
           />
           <SidebarItem
             label="Earnings Page"
             icon={VscReferences}
-            to="/admin/earnings"
+            to="/dashboard/earnings"
             onClose={onClose}
           />
           <SidebarItem
             label="Package Purchase"
             icon={VscReferences}
-            to="/admin/purchase"
+            to="/dashboard/purchase"
             onClose={onClose}
           />
           <SidebarItem
             label="Wallet"
             icon={VscReferences}
-            to="/admin/wallet"
+            to="/dashboard/wallet"
             onClose={onClose}
           />
         </VStack>
