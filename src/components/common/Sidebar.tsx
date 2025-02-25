@@ -4,16 +4,9 @@ import {
   Box,
   Button,
   Divider,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
   Flex,
   Icon,
   Text,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
@@ -30,35 +23,17 @@ interface SidebarItemProps {
   onClose: () => void;
 }
 
-const Sidebar = () => {
-  const { isOpen, onClose } = useDisclosure();
-
+const Sidebar = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
-      {/* Sidebar Drawer for Mobile */}
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Dashboard</DrawerHeader>
-          <DrawerBody>
-            <VStack spacing={4} align="flex-start">
-              <Link href="/">Dashboard</Link>
-              <Link href="/projects">Projects</Link>
-              <Link href="/settings">Settings</Link>
-              <Link href="/logout">Logout</Link>
-            </VStack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-
       {/* Sidebar for Desktop */}
       <Flex
         direction="column"
         bg="#262D33"
-        w="220px"
+        w="190px"
         minH="100vh"
-        p={4}
+        h="100%"
+        p={2}
         color="white"
         boxShadow="lg"
         borderRadius="lg"
@@ -143,7 +118,7 @@ const Sidebar = () => {
   );
 };
 
-const SidebarItem = ({ label, icon, to, onClose }: SidebarItemProps) => {
+export const SidebarItem = ({ label, icon, to, onClose }: SidebarItemProps) => {
   const pathname = usePathname();
   const isActive = pathname === to;
 
@@ -153,8 +128,8 @@ const SidebarItem = ({ label, icon, to, onClose }: SidebarItemProps) => {
         // border={isActive ? "1px solid #FFFFFF52" : "none"}
         display="flex"
         alignItems="center"
-        p={2}
-        w="200px"
+        py={2}
+        w="170px"
         bg={
           isActive
             ? "linear-gradient(100deg, #FFFFFF00, #FFFFFF52)"

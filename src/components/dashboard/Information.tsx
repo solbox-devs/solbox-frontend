@@ -49,7 +49,7 @@ const Information = () => {
 
   return (
     <Box>
-      <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
         {informationCardData.map((info, idx) => {
           return (
             <Box p={2} borderRadius="md" bg="#262D33" key={idx}>

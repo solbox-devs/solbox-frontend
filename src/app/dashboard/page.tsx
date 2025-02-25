@@ -1,6 +1,6 @@
-import EarningHistory from "@/components/admin/EarningHistory";
-import Information from "@/components/admin/Information";
-import UsersTable from "@/components/admin/UsersTable";
+import EarningHistory from "@/components/dashboard/EarningHistory";
+import Information from "@/components/dashboard/Information";
+import UsersTable from "@/components/dashboard/UsersTable";
 import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 
@@ -15,9 +15,9 @@ const AdminMainPage = () => {
       </Box>
       <SimpleGrid
         my={4}
-        columns={{ base: 1, md: 2 }}
+        columns={{ base: 1, md: 1, lg: 2 }}
         spacing={4}
-        gridTemplateColumns={{ base: "1fr", md: "2fr 1fr" }}
+        gridTemplateColumns={{ base: "1fr", md: "1fr", lg: "2fr 1fr" }}
       >
         <Box>
           <EarningHistory />

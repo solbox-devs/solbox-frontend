@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Flex,
-  HStack,
   Input,
   InputGroup,
   InputLeftElement,
@@ -16,19 +15,37 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { FaWallet } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { RiProfileFill } from "react-icons/ri";
 
-const TopBar = () => {
+interface TopBarProps {
+  onOpen: () => void;
+}
+
+const TopBar = ({ onOpen }: TopBarProps) => {
   return (
     <Box w="97%" mx="auto" bg="#262D33" p={3} borderRadius={10}>
-      <Flex justify="space-between" align="center">
-        <Box>
-          <Text fontSize="sm">Saturday, November 18</Text>
-          <Text fontSize="lg" fontWeight={400}>
-            Good after noon, Usman
-          </Text>
-        </Box>
-        <HStack>
+      <Flex
+        justify="space-between"
+        // align="center"
+        flexDir={{ base: "column", md: "row" }}
+      >
+        <Flex alignItems="center" justifyContent="space-between" mb={4}>
+          <Box>
+            <Text fontSize="sm">Saturday, November 18</Text>
+            <Text fontSize="lg" fontWeight={400}>
+              Good after noon, Usman
+            </Text>
+          </Box>
+          <Box
+            cursor="pointer"
+            display={{ base: "block", md: "none" }}
+            onClick={() => onOpen()}
+          >
+            <GiHamburgerMenu fontSize="30px" color="white" />
+          </Box>
+        </Flex>
+        <Flex alignItems="center" gap={4}>
           <Box>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
@@ -77,7 +94,7 @@ const TopBar = () => {
               </MenuList>
             </Menu>
           </Box>
-        </HStack>
+        </Flex>
       </Flex>
     </Box>
   );
