@@ -13,7 +13,6 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 
 const data = [
@@ -44,13 +43,12 @@ const data = [
 ];
 
 const UsersTable = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   return (
     <Box w="full" p={4} bg="#262D33" borderRadius="md">
       {/* Desktop View */}
-      {!isMobile && (
-        <Table variant="simple">
+
+      <Box display={{ base: "none", md: "block" }}>
+        <Table variant="simple" size="sm">
           <Thead>
             <Tr borderBottom="2px solid #FFFFFF1A">
               <Th color="#FFFFFF">Users Name</Th>
@@ -75,42 +73,42 @@ const UsersTable = () => {
             ))}
           </Tbody>
         </Table>
-      )}
+      </Box>
 
       {/* Mobile View (Card Layout) */}
-      {isMobile && (
-        <Stack spacing={4}>
-          {data.map((user) => (
-            <Card
-              key={user.id}
-              p={4}
-              boxShadow="md"
-              borderRadius="lg"
-              bg="#1E2429"
-            >
-              <CardBody>
-                <Stack spacing={2}>
-                  <Stack direction="row" align="center">
-                    <Avatar size="md" src={user.avatar} name={user.name} />
-                    <Text fontSize="lg" color="#FFFFFF">
-                      {user.name}
-                    </Text>
-                  </Stack>
-                  <Text color="#FFFFFF">
-                    <b>Date:</b> {user.date}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Total Referrals:</b> {user.referrals}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Profit:</b> {user.profit}
+
+      <Stack spacing={4} display={{ base: "block", md: "none" }}>
+        {data.map((user) => (
+          <Card
+            key={user.id}
+            p={4}
+            boxShadow="md"
+            borderRadius="lg"
+            bg="#1E2429"
+            my={2}
+          >
+            <CardBody>
+              <Stack spacing={2}>
+                <Stack direction="row" align="center">
+                  <Avatar size="md" src={user.avatar} name={user.name} />
+                  <Text fontSize="lg" color="#FFFFFF">
+                    {user.name}
                   </Text>
                 </Stack>
-              </CardBody>
-            </Card>
-          ))}
-        </Stack>
-      )}
+                <Text color="#FFFFFF">
+                  <b>Date:</b> {user.date}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Total Referrals:</b> {user.referrals}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Profit:</b> {user.profit}
+                </Text>
+              </Stack>
+            </CardBody>
+          </Card>
+        ))}
+      </Stack>
     </Box>
   );
 };
