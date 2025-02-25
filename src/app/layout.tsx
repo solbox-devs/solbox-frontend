@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { Providers } from "../context/providers";
 import "./globals.css";
+import AppWalletProvider from "@/context/walletProvider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -21,8 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable}`}>
-        <Providers>{children}</Providers>
+      <body>
+        <AppWalletProvider>
+          <Providers>{children}</Providers>
+        </AppWalletProvider>
       </body>
     </html>
   );
