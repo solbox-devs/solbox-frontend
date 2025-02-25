@@ -1,6 +1,57 @@
+"use client";
 import logo from "@/assets/banner.png";
-import { Box, Button, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import SolanaWalletButton from "@/components/core/SolanaWalletButton";
+import authService from "@/services/authService";
+import {
+  Box,
+  Button,
+  Image,
+  SimpleGrid,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
+
 const ConnectWallet = () => {
+  const { connected, publicKey } = useWallet();
+  const toast = useToast();
+  const router = useRouter();
+
+  const handleUserLogin = useCallback(async () => {
+    try {
+      const res: any = await authService.userLogin({
+        walletAddress: publicKey?.toBase58(),
+      });
+
+      console.log("res", res);
+
+      if (res?.success) {
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      // Check if it's a 404 error
+      if (error.response?.status === 404) {
+        router.push("/signup"); // Redirect to signup page on 404
+      } else {
+        toast({
+          title: "Login Failed",
+          description: error.message || "An error occurred during login",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  }, [publicKey, router, toast]); // Updated dependencies
+
+  useEffect(() => {
+    if (connected && publicKey) {
+      handleUserLogin();
+    }
+  }, [connected, publicKey, handleUserLogin]);
+
   return (
     <Box
       display="flex"
@@ -29,7 +80,7 @@ const ConnectWallet = () => {
                 Login with your wallet
               </Text>
             </Box>
-            <Button variant="primary">Connect Wallet</Button>
+            <SolanaWalletButton />
           </Box>
         </Box>
         <Box

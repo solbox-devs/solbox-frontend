@@ -17,6 +17,7 @@ import Link from "next/link";
 import { FaWallet } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiProfileFill } from "react-icons/ri";
+import SolanaWalletButton from "../core/SolanaWalletButton";
 
 interface TopBarProps {
   onOpen: () => void;
@@ -68,13 +69,15 @@ const TopBar = ({ onOpen }: TopBarProps) => {
             </InputGroup>
           </Box>
           <Box>
-            <Button
+            {/* <Button
               borderRadius="30px"
               variant="primary"
               leftIcon={<FaWallet color="white" />}
             >
               Your Wallet
-            </Button>
+            </Button> */}
+
+            <SolanaWalletButton />
           </Box>
           <Box>
             <Menu>

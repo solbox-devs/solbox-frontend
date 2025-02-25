@@ -29,3 +29,17 @@
   --menu-bg: "none" !important;
   border: none;
 }
+
+
+.customWalletBtn {
+  background-color: #ff6600 !important;
+  color: white !important;
+  font-size: 16px !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.customWalletBtn:hover {
+  background-color: #ff4500 !important;
+}
