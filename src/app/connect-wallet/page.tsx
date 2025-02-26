@@ -1,15 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import logo from "@/assets/banner.png";
 import SolanaWalletButton from "@/components/core/SolanaWalletButton";
 import authService from "@/services/authService";
-import {
-  Box,
-  Button,
-  Image,
-  SimpleGrid,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Image, SimpleGrid, Text, useToast } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";

@@ -1,15 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Cookies from "js-cookie";
 import apiClient from "./apiClient";
 
 class AuthService {
-  async userRegistration(data: { username: string; referralCode: string; walletAddress: any }) {
+  async userRegistration(data: {
+    username: string;
+    referralCode: string;
+    walletAddress: any;
+  }) {
     try {
       const response = await apiClient.post("/user/register", data);
       const { token, user } = response.data;
-      
+
       // Store in cookies instead of localStorage
       Cookies.set("token", token, { secure: true, sameSite: "Strict" });
-      Cookies.set("user", JSON.stringify(user), { secure: true, sameSite: "Strict" });
+      Cookies.set("user", JSON.stringify(user), {
+        secure: true,
+        sameSite: "Strict",
+      });
 
       return response.data;
     } catch (error) {
@@ -25,7 +33,10 @@ class AuthService {
 
       // Store in cookies
       Cookies.set("token", token, { secure: true, sameSite: "Strict" });
-      Cookies.set("user", JSON.stringify(user), { secure: true, sameSite: "Strict" });
+      Cookies.set("user", JSON.stringify(user), {
+        secure: true,
+        sameSite: "Strict",
+      });
 
       return response.data;
     } catch (error) {
@@ -45,4 +56,5 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+const authServiceInstance = new AuthService();
+export default authServiceInstance;

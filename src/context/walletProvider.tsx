@@ -1,15 +1,15 @@
 // imports here
 "use client";
 
-import React, { useMemo } from "react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
 import * as walletAdapterWallets from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
+import React, { useMemo } from "react";
 
 import "@solana/wallet-adapter-react-ui/styles.css";
 
@@ -22,7 +22,7 @@ export default function AppWalletProvider({
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   const wallets = useMemo(
     () => [new walletAdapterWallets.PhantomWalletAdapter()],
-    [network]
+    []
   );
 
   return (

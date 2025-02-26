@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios, { AxiosInstance } from "axios";
 
 // Function to get token from localStorage
 const getToken = (): string | null => {
@@ -10,7 +11,7 @@ const getToken = (): string | null => {
 
 // Create Axios instance
 const apiClient: AxiosInstance = axios.create({
-  baseURL:  "http://localhost:8000/api/v1",
+  baseURL: "http://localhost:8000/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

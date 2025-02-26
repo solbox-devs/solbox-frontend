@@ -1,5 +1,6 @@
 "use client";
 
+import authService from "@/services/authService";
 import {
   Box,
   Button,
@@ -12,13 +13,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaKey, FaUserAlt, FaWallet } from "react-icons/fa";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useEffect } from "react";
-import SolanaWalletButton from "../core/SolanaWalletButton";
-import authService from "@/services/authService";
-import { useRouter } from "next/navigation";
 
 type FormData = {
   username: string;
@@ -40,7 +39,7 @@ const SignupForm = () => {
     },
   });
 
-  const { publicKey, connected } = useWallet();
+  const { publicKey } = useWallet();
   const router = useRouter();
 
   const getShortAddress = (address: string) => {
@@ -133,7 +132,7 @@ const SignupForm = () => {
 
           <Checkbox {...register("noReferral")} colorScheme="pink">
             <Text fontSize="sm" color="#F1F5F9">
-              Don't have a referral id? Use default Id
+              Don&apos;t have a referral id? Use default Id
             </Text>
           </Checkbox>
 
