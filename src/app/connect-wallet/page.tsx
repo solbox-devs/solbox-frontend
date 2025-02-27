@@ -2,11 +2,11 @@
 "use client";
 import logo from "@/assets/banner.png";
 import SolanaWalletButton from "@/components/core/SolanaWalletButton";
-import authService from "@/services/authService";
 import { Box, Image, SimpleGrid, Text, useToast } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
+import authService from "../../services/authService";
 
 const ConnectWallet = () => {
   const { connected, publicKey } = useWallet();

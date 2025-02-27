@@ -1,9 +1,14 @@
+/* eslint-disable import/no-anonymous-default-export */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Cookies from "js-cookie";
 import apiClient from "./apiClient";
 
 class AuthService {
-  async userRegistration(data: { username: string; referrerUsername: string; walletAddress: any }) {
+  async userRegistration(data: {
+    username: string;
+    referrerUsername: string;
+    walletAddress: any;
+  }) {
     try {
       const response = await apiClient.post("/users/user/register", data);
       const { token, user } = response.data;
@@ -46,19 +51,15 @@ class AuthService {
 
   userLogout() {
     try {
-
       Cookies.remove("token");
       Cookies.remove("user");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   }
-  getUser(){
-    return Cookies.get("user")
+  getUser() {
+    return Cookies.get("user");
   }
 }
 
-const authServiceInstance = new AuthService();
-export default authServiceInstance;
-const authServiceInstance = new AuthService();
-export default authServiceInstance;
+export default new AuthService();

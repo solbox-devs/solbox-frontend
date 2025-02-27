@@ -1,3 +1,4 @@
+"use client";
 import UserDetails from "@/components/profile/UserDetails";
 import UserOrganization from "@/components/profile/UserOrganization";
 import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";

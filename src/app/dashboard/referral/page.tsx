@@ -1,6 +1,7 @@
 "use client";
 import MyReferralsTable from "@/components/referral/MyReferralsTable";
 import ReferralTree from "@/components/referral/ReferralTree";
+
 import { CopyIcon, SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
