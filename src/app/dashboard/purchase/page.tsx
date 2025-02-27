@@ -15,14 +15,17 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { AnchorProvider, BN, Program, web3 } from "@project-serum/anchor";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
+import { Connection, LAMPORTS_PER_SOL, PublicKey, Transaction } from "@solana/web3.js";
 import { useCallback, useEffect, useState } from "react";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 import { FaBuysellads } from "react-icons/fa";
 import IDL from "../../../constants/idl.json";
 import authService from "../../../services/authService";
 import PackageService from "../../../services/packageService";
+
+// import bs58 from "bs58";
+import { base58_to_binary, binary_to_base58 } from 'base58-js';
 
 const PROGRAM_ID = new PublicKey(
   "FqMQ5TF8M5pEWGzbj7gDx3ezJVniebaSHBmA4MexUN51"
@@ -59,7 +62,8 @@ const waitForTransactionConfirmation = async (
 };
 
 const PackagePurchase = () => {
-  const { wallet, connected, publicKey } = useWallet();
+  const { connected, publicKey } = useWallet();
+  const wallet = useAnchorWallet();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("Transaction processing");
@@ -127,25 +131,25 @@ const PackagePurchase = () => {
         });
         return;
       }
-
+  
       setIsLoading(true);
       setError(null);
       setLoadingMsg("Fetching referral uplinks...");
-
+  
       try {
         const referralResponse = await PackageService.getReferralUplinks(
           parsedUserDetails._id
         );
-
+  
         if (!referralResponse.success) {
           throw new Error(
             referralResponse.message || "Failed to get referral uplinks"
           );
         }
-
+  
         const referrals = referralResponse.referrals || [];
         const net_package_price = package_price;
-
+  
         // Calculate commissions
         const commissionData = referrals.map(
           (ref: { commission: number; walletAddress: any }) => {
@@ -158,28 +162,28 @@ const PackagePurchase = () => {
             };
           }
         );
-
+  
         setLoadingMsg("Initializing transaction...");
         const connection = new Connection(NETWORK.network, {
           commitment: "confirmed",
           confirmTransactionInitialTimeout: 120000,
         });
-
+  
         const provider = new AnchorProvider(connection, wallet.adapter as any, {
           preflightCommitment: "confirmed",
         });
-
+  
         const program = new Program(IDL as any, PROGRAM_ID, provider);
         const lpWallet = new PublicKey(NETWORK.lp_wallet);
         const founder = new PublicKey(NETWORK.founder_wallet);
-
+  
         // Prepare commission amounts for the program
         const commissions = commissionData.map(
           (data: { commission: any }) => data.commission
         );
-
-        setLoadingMsg("Please confirm the transaction...");
-        const transactionResponse = await program.methods
+  
+        // Create the transaction instruction
+        const instruction = await program.methods
           .purchasePackage(
             new BN(net_package_price * LAMPORTS_PER_SOL),
             commissions
@@ -190,56 +194,96 @@ const PackagePurchase = () => {
             founder: founder,
             systemProgram: web3.SystemProgram.programId,
           })
-          .rpc();
+          .instruction();
+  
+        // Create the transaction
+        const transaction = new Transaction().add(instruction);
+        transaction.feePayer = publicKey;
+        transaction.recentBlockhash = (
+          await connection.getRecentBlockhash()
+        ).blockhash;
+  
+        // Request the wallet to sign the transaction
+        setLoadingMsg("Please confirm the transaction...");
+        const signedTransaction = await wallet.signTransaction(transaction);
+        
+        // Serialize the signed transaction to a byte array
+        const serializedTransaction = signedTransaction.serialize();
+        console.log(serializedTransaction);
+  
+        // Encode the serialized transaction to a base-58 string
+        const base58Transaction = binary_to_base58(serializedTransaction);
+  
+        // At this point, you have the base-58 encoded transaction string
+        // You can send this string to your backend or broadcast it to the network
+        console.log("Base-58 Encoded Transaction:", base58Transaction);
 
-        setLoadingMsg("Confirming transaction...");
-        const txConfirm = await waitForTransactionConfirmation(
-          transactionResponse,
-          connection,
-          txCounter,
-          setTxCounter,
-          setLoadingMsg
-        );
+        const request = {
+          method: "sendTransaction",
+          params: [
+            base58Transaction,
+            {
+              skipPreflight: false,
+              preflightCommitment: "confirmed",
+              network: "devnet",
+            },
+          ],
+        };
+  
+        console.log("sending rpc request...");
+        const result = await connection._rpcRequest(request.method, request.params);
+        console.log(result);
 
-        if (txConfirm) {
-          // Record the purchase with commission details
-          setLoadingMsg("Recording purchase...");
-          const recordResponse = await PackageService.recordPackagePurchase({
-            signature: transactionResponse,
-            packageId: package_id,
-            packagePrice: net_package_price,
-            userId: parsedUserDetails._id,
-            referrals: commissionData.map(
-              (data: { walletAddress: any; commission: any }) => ({
-                walletAddress: data.walletAddress,
-                commission: Number(data.commission) / LAMPORTS_PER_SOL,
-              })
-            ),
-          });
-
-          if (!recordResponse.success) {
-            console.warn("Failed to record purchase:", recordResponse.message);
-          }
-
-          // Update user's package
-          const packageResponse = await PackageService.getUserPackage(
-            parsedUserDetails._id
-          );
-          if (packageResponse.success && packageResponse.hasPackage) {
-            setUserPackage(packageResponse.packageDetails);
-          }
-
-          toast({
-            title: "Purchase Successful",
-            description:
-              "Package purchased and commissions distributed successfully!",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-        } else {
-          throw new Error("Transaction not confirmed");
-        }
+        // // Optionally, send the transaction directly to the network
+        // setLoadingMsg("Sending transaction to the network...");
+        // const txId = await connection.sendRawTransaction(serializedTransaction, {
+        //   skipPreflight: false,
+        //   preflightCommitment: "confirmed",
+        // });
+  
+        // // Confirm the transaction
+        // setLoadingMsg("Confirming transaction...");
+        // const confirmation = await connection.confirmTransaction(txId, "confirmed");
+  
+        // if (confirmation.value.err) {
+        //   throw new Error("Transaction failed: " + confirmation.value.err.toString());
+        // }
+  
+        // // Record the purchase with commission details
+        // setLoadingMsg("Recording purchase...");
+        // const recordResponse = await PackageService.recordPackagePurchase({
+        //   signature: txId,
+        //   packageId: package_id,
+        //   packagePrice: net_package_price,
+        //   userId: parsedUserDetails._id,
+        //   referrals: commissionData.map(
+        //     (data: { walletAddress: any; commission: any }) => ({
+        //       walletAddress: data.walletAddress,
+        //       commission: Number(data.commission) / LAMPORTS_PER_SOL,
+        //     })
+        //   ),
+        // });
+  
+        // if (!recordResponse.success) {
+        //   console.warn("Failed to record purchase:", recordResponse.message);
+        // }
+  
+        // // Update user's package
+        // const packageResponse = await PackageService.getUserPackage(
+        //   parsedUserDetails._id
+        // );
+        // if (packageResponse.success && packageResponse.hasPackage) {
+        //   setUserPackage(packageResponse.packageDetails);
+        // }
+  
+        toast({
+          title: "Purchase Successful",
+          description:
+            "Package purchased and commissions distributed successfully!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
       } catch (error: any) {
         console.error("Error purchasing package:", error);
         setError(error.message || "An error occurred during purchase");
@@ -258,6 +302,7 @@ const PackagePurchase = () => {
     },
     [wallet, connected, publicKey, parsedUserDetails, txCounter, toast]
   );
+  
 
   const getPackageStatus = (packageId: number) => {
     if (!userPackage) return "Not Purchased";

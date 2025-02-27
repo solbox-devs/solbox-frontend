@@ -23,6 +23,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.98.0",
     "axios": "^1.7.9",
+    "base58-js": "^3.0.2",
     "cookies-next": "^5.1.0",
     "framer-motion": "^12.4.3",
     "framer-motion-3d": "^12.4.3",
