@@ -12,11 +12,11 @@ import {
   InputLeftElement,
   Stack,
   Text,
-  Spinner, // Added for loading indicator
+  // Spinner,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react"; // Added useState for loading
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaKey, FaUserAlt, FaWallet } from "react-icons/fa";
 
@@ -155,9 +155,9 @@ const SignupForm = () => {
             type="submit"
             variant="primary"
             width="full"
-            isLoading={isSubmitting} // Chakra's built-in loading state
-            loadingText="Signing Up" // Optional: text during loading
-            // You can also add a spinner manually if you prefer:
+            isLoading={isSubmitting}
+            loadingText="Signing Up"
+
             // rightIcon={isSubmitting ? <Spinner size="sm" /> : null}
           >
             Sign Up
