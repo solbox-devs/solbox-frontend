@@ -3,11 +3,7 @@ import Cookies from "js-cookie";
 import apiClient from "./apiClient";
 
 class AuthService {
-  async userRegistration(data: {
-    username: string;
-    referralCode: string;
-    walletAddress: any;
-  }) {
+  async userRegistration(data: { username: string; referrerUsername: string; walletAddress: any }) {
     try {
       const response = await apiClient.post("/users/user/register", data);
       const { token, user } = response.data;
