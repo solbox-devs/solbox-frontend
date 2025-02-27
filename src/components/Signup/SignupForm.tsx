@@ -12,6 +12,7 @@ import {
   InputLeftElement,
   Stack,
   Text,
+  useToast,
   // Spinner,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -42,7 +43,8 @@ const SignupForm = () => {
 
   const { publicKey } = useWallet();
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false); // Added loading state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
 
   const getShortAddress = (address: string) => {
     if (!address) return "Connect Wallet";
@@ -59,8 +61,8 @@ const SignupForm = () => {
   }, [publicKey, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true); // Start loading
-    console.log("Form Data:", data);
+    setIsSubmitting(true);
+
     const {
       username,
       referralCode: referrerUsername,
@@ -73,15 +75,19 @@ const SignupForm = () => {
         referrerUsername,
         walletAddress,
       });
-      console.log("Response:", res);
+
       if (res?.success) {
         router.push("/dashboard");
       }
-    } catch (error) {
-      console.error("Submission error:", error);
-      // Optionally handle error (e.g., show toast notification)
+    } catch (error: any) {
+      toast({
+        status: "error",
+        title: error?.response?.data?.message,
+        duration: 2000,
+        position: "bottom",
+      });
     } finally {
-      setIsSubmitting(false); // Stop loading
+      setIsSubmitting(false);
     }
   };
 
