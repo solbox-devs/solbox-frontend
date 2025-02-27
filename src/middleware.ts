@@ -9,7 +9,7 @@ export function middleware(req: NextRequest) {
 
 
   if (!token && !publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/signup", req.url));
+    return NextResponse.redirect(new URL("/connect-wallet", req.url));
   }
 
   return NextResponse.next();
