@@ -17,12 +17,18 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiProfileFill } from "react-icons/ri";
 import SolanaWalletButton from "../core/SolanaWalletButton";
+import authService from "../../services/authService";
 
 interface TopBarProps {
   onOpen: () => void;
 }
 
 const TopBar = ({ onOpen }: TopBarProps) => {
+  const userDetails: any = authService.getUser();
+  const parsedUserDetails = JSON.parse(userDetails);
+
+  const date = new Date().getUTCDate();
+
   return (
     <Box w="97%" mx="auto" bg="#262D33" p={3} borderRadius={10}>
       <Flex
@@ -34,7 +40,7 @@ const TopBar = ({ onOpen }: TopBarProps) => {
           <Box>
             <Text fontSize="sm">Saturday, November 18</Text>
             <Text fontSize="lg" fontWeight={400}>
-              Good after noon, Usman
+              Good after noon, {parsedUserDetails?.username}
             </Text>
           </Box>
           <Box
