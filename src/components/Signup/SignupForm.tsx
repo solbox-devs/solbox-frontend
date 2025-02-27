@@ -58,13 +58,18 @@ const SignupForm = () => {
 
   const onSubmit = async (data: FormData) => {
     console.log("Form Data:", data);
-    const { username, referralCode, walletConnected: walletAddress } = data;
+    const {
+      username,
+      referralCode: referrerUsername,
+      walletConnected: walletAddress,
+    } = data;
 
     const res = await authService.userRegistration({
       username,
-      referralCode,
+      referrerUsername,
       walletAddress,
     });
+    console.log("res");
     if (res?.success) {
       router.push("/dashboard");
     }
@@ -107,7 +112,7 @@ const SignupForm = () => {
               </InputLeftElement>
               <Input
                 type="text"
-                placeholder="Enter referral code"
+                placeholder="Enter referral username"
                 {...register("referralCode")}
                 variant="primary"
               />
