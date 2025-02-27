@@ -25,8 +25,20 @@ interface TopBarProps {
 }
 
 const TopBar = ({ onOpen }: TopBarProps) => {
+  // const userDetails: any = authService.getUser();
+  // const parsedUserDetails = JSON.parse(userDetails);
+
   const userDetails: any = authService.getUser();
-  const parsedUserDetails = JSON.parse(userDetails);
+  let parsedUserDetails = null;
+
+  try {
+    if (userDetails) {
+      parsedUserDetails =
+        typeof userDetails === "string" ? JSON.parse(userDetails) : userDetails;
+    }
+  } catch (error) {
+    console.error("Failed to parse user details:", error);
+  }
 
   return (
     <Box w="97%" mx="auto" bg="#262D33" p={3} borderRadius={10}>
