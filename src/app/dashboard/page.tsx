@@ -20,7 +20,7 @@ const AdminMainPage = () => {
         my={4}
         columns={{ base: 1, md: 1, lg: 2 }}
         spacing={4}
-        gridTemplateColumns={{ base: "1fr", md: "1fr", lg: "2fr 1fr" }}
+        gridTemplateColumns={{ base: "1fr", lg: "2fr 1fr" }}
       >
         <Box>
           <Box my={2}>
@@ -30,13 +30,15 @@ const AdminMainPage = () => {
               </Text>
               <Box borderRadius="md" p={2} bg="#262D33">
                 <Flex alignItems="center" gap={10} justify="space-between">
-                  <Text fontSize="md" color="white">
+                  <Text fontSize={{ base: "xs", md: "md" }} color="gray.100">
                     https://solbox.com/signup?code=13ncn833
                   </Text>
                   <Button
                     variant="secondary"
                     borderRadius="3xl"
                     leftIcon={<CopyIcon />}
+                    size="sm"
+                    // fontSize="10px"
                   >
                     Copy link
                   </Button>

@@ -63,7 +63,7 @@ const TopBar = ({ onOpen }: TopBarProps) => {
           </Box>
         </Flex>
         <Flex alignItems="center" gap={4}>
-          <Box>
+          <Box display={{ base: "none", md: "block" }}>
             <InputGroup>
               <InputLeftElement pointerEvents="none">
                 <SearchIcon color="gray.300" />
