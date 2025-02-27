@@ -12,10 +12,12 @@ import {
   InputLeftElement,
   Stack,
   Text,
+  useToast,
+  // Spinner,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaKey, FaUserAlt, FaWallet } from "react-icons/fa";
 
@@ -41,6 +43,8 @@ const SignupForm = () => {
 
   const { publicKey } = useWallet();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
 
   const getShortAddress = (address: string) => {
     if (!address) return "Connect Wallet";
@@ -57,21 +61,33 @@ const SignupForm = () => {
   }, [publicKey, setValue]);
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
+    setIsSubmitting(true);
+
     const {
       username,
       referralCode: referrerUsername,
       walletConnected: walletAddress,
     } = data;
 
-    const res = await authService.userRegistration({
-      username,
-      referrerUsername,
-      walletAddress,
-    });
-    console.log("res");
-    if (res?.success) {
-      router.push("/dashboard");
+    try {
+      const res = await authService.userRegistration({
+        username,
+        referrerUsername,
+        walletAddress,
+      });
+
+      if (res?.success) {
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast({
+        status: "error",
+        title: error?.response?.data?.message,
+        duration: 2000,
+        position: "bottom",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -137,11 +153,19 @@ const SignupForm = () => {
 
           <Checkbox {...register("noReferral")} colorScheme="pink">
             <Text fontSize="sm" color="#F1F5F9">
-              Don&apos;t have a referral id? Use default Id
+              Don't have a referral id? Use default Id
             </Text>
           </Checkbox>
 
-          <Button type="submit" variant="primary" width="full">
+          <Button
+            type="submit"
+            variant="primary"
+            width="full"
+            isLoading={isSubmitting}
+            loadingText="Signing Up"
+
+            // rightIcon={isSubmitting ? <Spinner size="sm" /> : null}
+          >
             Sign Up
           </Button>
         </Stack>
