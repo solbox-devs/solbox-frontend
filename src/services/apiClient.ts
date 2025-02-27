@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 // Function to get token from localStorage
 const getToken = (): string | null => {
@@ -11,7 +10,7 @@ const getToken = (): string | null => {
 
 // Create Axios instance
 const apiClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL:  "https://solbox-backend.onrender.com/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
