@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import {
@@ -16,8 +17,8 @@ import {
 import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiProfileFill } from "react-icons/ri";
-import SolanaWalletButton from "../core/SolanaWalletButton";
 import authService from "../../services/authService";
+import SolanaWalletButton from "../core/SolanaWalletButton";
 
 interface TopBarProps {
   onOpen: () => void;
@@ -26,8 +27,6 @@ interface TopBarProps {
 const TopBar = ({ onOpen }: TopBarProps) => {
   const userDetails: any = authService.getUser();
   const parsedUserDetails = JSON.parse(userDetails);
-
-  const date = new Date().getUTCDate();
 
   return (
     <Box w="97%" mx="auto" bg="#262D33" p={3} borderRadius={10}>
