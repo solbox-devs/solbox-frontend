@@ -1,109 +1,170 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Box } from "@chakra-ui/react";
-import { useCallback } from "react";
-import ReactFlow, {
-  addEdge,
-  Background,
-  Connection,
-  Node,
-  Position,
-  useEdgesState,
-  useNodesState,
-} from "reactflow";
-import "reactflow/dist/style.css";
 
-const initialNodes = [
-  {
-    id: "1",
-    data: { label: "Root" },
-    position: { x: 250, y: 5 },
-    sourcePosition: Position.Bottom,
-  },
-  {
-    id: "2",
-    data: { label: "Child 1" },
-    position: { x: 100, y: 100 },
-    sourcePosition: Position.Bottom,
-    targetPosition: Position.Top,
-  },
-  {
-    id: "3",
-    data: { label: "Child 2" },
-    position: { x: 400, y: 100 },
-    sourcePosition: Position.Bottom,
-    targetPosition: Position.Top,
-  },
-];
+import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { SetStateAction, useState } from "react";
 
-const initialEdges = [
-  { id: "e1-2", source: "1", target: "2" },
-  { id: "e1-3", source: "1", target: "3" },
-];
+const initialData = {
+  name: "Kaitlyn Stone",
+  spent: 357.5,
+  referralSpent: 3170,
+  children: [
+    {
+      name: "Jessa Bolinger",
+      spent: 703,
+      referralSpent: 969.5,
+      children: [
+        { name: "Brooke Jenkins", spent: 393, referralSpent: 0, children: [] },
+        { name: "Diana Moses", spent: 576.5, referralSpent: 0, children: [] },
+      ],
+    },
+    {
+      name: "Matthew Ericson",
+      spent: 534,
+      referralSpent: 158,
+      children: [
+        { name: "Steve Stone", spent: 158, referralSpent: 0, children: [] },
+      ],
+    },
+    { name: "Trin Stone", spent: 448, referralSpent: 0, children: [] },
+    { name: "Alice Johnson", spent: 720, referralSpent: 500, children: [] },
+    { name: "Charlie Adams", spent: 600, referralSpent: 350, children: [] },
+  ],
+};
 
 const ReferralTree = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [history, setHistory] = useState<(typeof initialData)[]>([]);
+  const [currentNode, setCurrentNode] = useState(initialData);
 
-  const onConnect = useCallback(
-    (params: Connection) => setEdges((eds: any) => addEdge(params, eds)),
-    [setEdges]
-  );
+  const handleNodeClick = (
+    node: SetStateAction<{
+      name: string;
+      spent: number;
+      referralSpent: number;
+      children: {
+        name: string;
+        spent: number;
+        referralSpent: number;
+        children: {
+          name: string;
+          spent: number;
+          referralSpent: number;
+          children: never[];
+        }[];
+      }[];
+    }>
+  ) => {
+    setHistory([...history, currentNode]);
+    setCurrentNode(node);
+  };
 
-  // Function to handle node clicks
-  const handleNodeClick = (event: React.MouseEvent, node: Node) => {
-    if (node.id === "2" && !nodes.some((n) => n.id === "4")) {
-      // Check if Child 1 has been clicked and Child 1's children aren't added
-      // Add child nodes for "Child 1"
-      setNodes((nds) => [
-        ...nds,
-        {
-          id: "4",
-          data: { label: "Child 1.1" },
-          position: { x: 50, y: 200 },
-          sourcePosition: Position.Bottom,
-          targetPosition: Position.Top,
-        },
-        {
-          id: "5",
-          data: { label: "Child 1.2" },
-          position: { x: 150, y: 200 },
-          sourcePosition: Position.Bottom,
-          targetPosition: Position.Top,
-        },
-        {
-          id: "6",
-          data: { label: "Child 1.3" },
-          position: { x: 250, y: 200 },
-          sourcePosition: Position.Bottom,
-          targetPosition: Position.Top,
-        },
-      ]);
-      setEdges((eds) => [
-        ...eds,
-        { id: "e2-4", source: "2", target: "4" },
-        { id: "e2-5", source: "2", target: "5" },
-        { id: "e2-6", source: "2", target: "6" },
-      ]);
+  const handleBack = () => {
+    if (history.length > 0) {
+      setCurrentNode(history[history.length - 1]);
+      setHistory(history.slice(0, -1));
     }
   };
 
   return (
-    <Box width="100%" height="400px" bg="gray.800" borderRadius="md" p={4}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onNodeClick={handleNodeClick} // Add the onNodeClick handler here
-        fitView
+    <Flex
+      direction="column"
+      align="center"
+      p={6}
+      bg="#262D33"
+      borderRadius="md"
+      minH="50vh"
+    >
+      <Text fontSize="xl" fontWeight="bold">
+        {currentNode.name}&apos;s Referral Tree
+      </Text>
+      {history.length > 0 && (
+        <Button
+          mt={2}
+          onClick={handleBack}
+          size="sm"
+          variant="primary"
+          w="150px"
+          mb={4}
+        >
+          Back
+        </Button>
+      )}
+      <Divider my={1} />
+      <TreeNode data={currentNode} onNodeClick={handleNodeClick} />
+    </Flex>
+  );
+};
+
+const TreeNode = ({ data, onNodeClick }: any) => {
+  // Sort children by highest `spent` and pick the top 5
+  const sortedChildren = [...data.children]
+    .sort((a, b) => b.spent - a.spent)
+    .slice(0, 5);
+
+  return (
+    <Flex direction="column" align="center" my={4}>
+      <Box
+        as={motion.div}
+        whileHover={{ scale: 1.05 }}
+        p={4}
+        borderWidth={1}
+        color="white"
+        textAlign="center"
+        borderRadius="md"
+        boxShadow="md"
+        minW="200px"
       >
-        {/* <MiniMap /> */}
-        {/* <Controls /> */}
-        <Background />
-      </ReactFlow>
-    </Box>
+        <Text fontWeight="bold">{data.name}</Text>
+        <Text>Spent: {data.spent.toFixed(2)}</Text>
+        <Text color="orange.300">
+          Referral: {data.referralSpent.toFixed(2)}
+        </Text>
+      </Box>
+
+      {sortedChildren.length > 0 && (
+        <Flex gap={6} position="relative">
+          <Box
+            position="absolute"
+            w="2px"
+            h="60px"
+            bg="gray.500"
+            left="50%"
+            transform="translateX(-50%)"
+          />
+          {sortedChildren.map((child) => (
+            <Flex key={child.name} direction="column" align="center" mt={16}>
+              <Box
+                as={motion.div}
+                whileHover={{ scale: 1.05 }}
+                p={4}
+                borderWidth={1}
+                color="white"
+                textAlign="center"
+                borderRadius="md"
+                boxShadow="md"
+                minW="200px"
+                cursor="pointer"
+                onClick={() => onNodeClick(child)}
+              >
+                <Text fontWeight={500}>{child.name}</Text>
+                <Text>Spent: {child.spent.toFixed(2)}</Text>
+                <Text color="orange.300">
+                  Referral: {child.referralSpent.toFixed(2)}
+                </Text>
+                <Text fontSize="sm" color="gray.400">
+                  {child.children.length > 0
+                    ? `${child.children.length} child${
+                        child.children.length > 1 ? "ren" : ""
+                      }`
+                    : "No children"}
+                </Text>
+              </Box>
+            </Flex>
+          ))}
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

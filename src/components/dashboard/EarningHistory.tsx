@@ -3,7 +3,7 @@ import { BsArrowUpRight } from "react-icons/bs";
 import EarningsChart from "./EarningsChart";
 const EarningHistory = () => {
   return (
-    <Box p={5} borderRadius="md" bg="#262D33">
+    <Box p={2} borderRadius="md" bg="#262D33">
       <Flex alignItems="center" justifyContent="space-between">
         <Box>
           <Text fontSize="sm">Earning history</Text>

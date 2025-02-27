@@ -1,6 +1,6 @@
 "use client";
-import DynamicReferralTree from "@/components/referral/DynamicReferralTree";
 import MyReferralsTable from "@/components/referral/MyReferralsTable";
+import ReferralTree from "@/components/referral/ReferralTree";
 import { CopyIcon, SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -71,10 +71,10 @@ const ReferralMainPage = () => {
         </Box>
       </Box>
       <Box>
-        <Text my={4} fontSize="xl" fontWeight={500}>
+        <Text my={2} fontSize="xl" fontWeight={500}>
           Network Tree
         </Text>
-        <DynamicReferralTree />
+        <ReferralTree />
       </Box>
     </Box>
   );

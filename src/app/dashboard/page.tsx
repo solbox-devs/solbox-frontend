@@ -1,6 +1,8 @@
+"use client";
 import EarningHistory from "@/components/dashboard/EarningHistory";
 import Information from "@/components/dashboard/Information";
 import UsersTable from "@/components/dashboard/UsersTable";
+import { CopyIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 
@@ -13,6 +15,7 @@ const AdminMainPage = () => {
       <Box my={2}>
         <Information />
       </Box>
+
       <SimpleGrid
         my={4}
         columns={{ base: 1, md: 1, lg: 2 }}
@@ -20,8 +23,32 @@ const AdminMainPage = () => {
         gridTemplateColumns={{ base: "1fr", md: "1fr", lg: "2fr 1fr" }}
       >
         <Box>
+          <Box my={2}>
+            <Box>
+              <Text fontSize="xl" fontWeight="bold">
+                Copy Referral Code
+              </Text>
+              <Box borderRadius="md" p={2} bg="#262D33">
+                <Flex alignItems="center" gap={10} justify="space-between">
+                  <Text fontSize="md" color="white">
+                    https://solbox.com/signup?code=13ncn833
+                  </Text>
+                  <Button
+                    variant="secondary"
+                    borderRadius="3xl"
+                    leftIcon={<CopyIcon />}
+                  >
+                    Copy link
+                  </Button>
+                </Flex>
+              </Box>
+            </Box>
+          </Box>
           <EarningHistory />
           <Box my={4}>
+            <Text fontSize="md" fontWeight={500} mb={1}>
+              Referral Table
+            </Text>
             <UsersTable />
           </Box>
         </Box>
