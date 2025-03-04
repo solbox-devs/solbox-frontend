@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import {

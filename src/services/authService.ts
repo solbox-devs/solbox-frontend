@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Cookies from "js-cookie";
 import apiClient from "./apiClient";
 
