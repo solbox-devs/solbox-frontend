@@ -10,21 +10,26 @@ const SignupPage = () => {
       width="100%"
       height="100vh"
     >
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-        <Box>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={1}>
+        <Box
+          h="100vh"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
           <SignupForm />
         </Box>
         <Box
-          bg="#262D33"
-          borderRadius="md"
           p={2}
-          display="flex"
+          display={{ base: "none", md: "flex" }}
           alignItems="center"
           justifyContent="center"
-          w="350px"
-          h="400px"
+          w="100%"
+          h="100vh"
         >
-          <Image src={logo.src} alt="logo" w="100%" h="100%" />
+          <Box w="450px" h="90vh" bg="#262D33" borderRadius="md">
+            <Image src={logo.src} alt="logo" w="100%" h="100%" />
+          </Box>
         </Box>
       </SimpleGrid>
     </Box>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import logo from "@/assets/banner.png";
 import SolanaWalletButton from "@/components/core/SolanaWalletButton";
