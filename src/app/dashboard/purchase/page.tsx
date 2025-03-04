@@ -176,7 +176,7 @@ const PackagePurchase = () => {
           confirmTransactionInitialTimeout: 120000,
         });
 
-        const provider = new AnchorProvider(connection, wallet.adapter as any, {
+        const provider = new AnchorProvider(connection, wallet?.adapter as any, {
           preflightCommitment: "confirmed",
         });
 
@@ -255,15 +255,17 @@ const PackagePurchase = () => {
         );
         console.log(result);
 
+        const txId = result.result;
+
         // Optionally, send the transaction directly to the network
-        setLoadingMsg("Sending transaction to the network...");
-        const txId = await connection.sendRawTransaction(
-          serializedTransaction,
-          {
-            skipPreflight: false,
-            preflightCommitment: "confirmed",
-          }
-        );
+        // setLoadingMsg("Sending transaction to the network...");
+        // const txId = await connection.sendRawTransaction(
+        //   serializedTransaction,
+        //   {
+        //     skipPreflight: false,
+        //     preflightCommitment: "confirmed",
+        //   }
+        // );
 
         // Confirm the transaction
         setLoadingMsg("Confirming transaction...");
