@@ -176,7 +176,7 @@ const PackagePurchase = () => {
           confirmTransactionInitialTimeout: 120000,
         });
 
-        const provider = new AnchorProvider(connection, wallet.adapter as any, {
+        const provider = new AnchorProvider(connection, wallet as any, {
           preflightCommitment: "confirmed",
         });
 
@@ -238,11 +238,11 @@ const PackagePurchase = () => {
         };
 
         console.log("sending rpc request...");
-        const result = await connection._rpcRequest(
-          request.method,
-          request.params
-        );
-        console.log(result);
+        const result = await connection.sendEncodedTransaction(base58Transaction, {
+          skipPreflight: false,
+          preflightCommitment: "confirmed",
+        });
+        console.log("Transaction result:", result);
 
         // // Optionally, send the transaction directly to the network
         // setLoadingMsg("Sending transaction to the network...");
