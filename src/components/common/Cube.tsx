@@ -1,11 +1,8 @@
-/* eslint-disable prefer-const */
 "use client";
 import { Box } from "@chakra-ui/react";
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import CSS
 import * as THREE from "three";
 
 const CarModel = () => {
@@ -19,7 +16,7 @@ const CarModel = () => {
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       setTargetRotation((prev) => {
-        let newRotation = prev + event.deltaY * 0.01; // Adjust sensitivity for scroll
+        const newRotation = prev + event.deltaY * 0.01; // Adjust sensitivity for scroll
         return Math.max(-Math.PI, Math.min(Math.PI, newRotation)); // Limit rotation range
       });
     };
@@ -83,66 +80,7 @@ const CarModel = () => {
   );
 };
 
-const TextCarousel = ({ onScroll }: { onScroll: (e: WheelEvent) => void }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const textArray = [
-    "This is the first text element.",
-    "Here is the second text.",
-    "Third text comes here.",
-    "This is the fourth one.",
-    "Now we have the fifth text.",
-    "Finally, the sixth text element!",
-  ];
-
-  const handleChange = (index: number) => {
-    setCurrentIndex(index); // Update the current carousel index
-  };
-
-  const settings = {
-    selectedItem: currentIndex,
-    showThumbs: false,
-    infiniteLoop: true,
-    emulateTouch: true,
-    onChange: handleChange,
-  };
-
-  return (
-    <Carousel {...settings} onWheel={onScroll}>
-      {textArray.map((text, index) => (
-        <Box
-          key={index}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          h="100px"
-        >
-          <Box
-            p="4"
-            border="1px"
-            borderColor="gray.300"
-            borderRadius="lg"
-            bg="gray.100"
-          >
-            <Box fontSize="xl" color="black" fontWeight="bold">
-              {text}
-            </Box>
-          </Box>
-        </Box>
-      ))}
-    </Carousel>
-  );
-};
-
 export default function CarScene() {
-  const [sliderOffset, setSliderOffset] = useState(0);
-
-  // Handle wheel scroll for carousel
-  const handleScroll = (event: WheelEvent) => {
-    const isScrollDown = event.deltaY > 0;
-    const nextIndex = isScrollDown ? sliderOffset + 1 : sliderOffset - 1;
-    setSliderOffset(Math.max(0, Math.min(5, nextIndex))); // Limit index between 0 and 5 for 6 items
-  };
-
   return (
     <Box
       h="100vh"
@@ -167,7 +105,6 @@ export default function CarScene() {
           <OrbitControls enableZoom={false} enablePan={false} />
         </Canvas>
       </Box>
-      <TextCarousel onScroll={handleScroll} />
     </Box>
   );
 }
