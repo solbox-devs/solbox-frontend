@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BN } from "@project-serum/anchor";
 import {
   type Connection,

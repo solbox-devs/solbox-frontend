@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
