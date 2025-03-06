@@ -1,66 +1,59 @@
-/* eslint-disable prefer-const */
 "use client";
-import { Box } from "@chakra-ui/react";
-import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
+import { Box, Heading, Text } from "@chakra-ui/react";
+import { Environment, useGLTF, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import CSS
 import * as THREE from "three";
 
-const CarModel = () => {
+const title = "SolBox: The Ultimate Web3 Platform on Solana";
+const sentences = [
+  "Network — Earn instant commissions with a powerful peer-to-peer referral system",
+  "Solana — Enjoy 100% crypto-based payouts directly to your wallet",
+  "Game — Engage in exclusive Play-to-Earn games and win rewards",
+  "Trading — Access crypto trading tools to grow your portfolio",
+  "NFTs — Discover, buy, and sell digital collectibles",
+  "Opportunity — Build your network and unlock unlimited residual incomes",
+];
+
+// **Updated Gradient Colors (No Brown)**
+const gradientColors = [
+  "linear-gradient(135deg, #1b1f3b, #3a4373)", // Dark Royal Blue
+  "linear-gradient(135deg, #10312b, #205a50)", // Midnight Teal
+  "linear-gradient(135deg, #1c2836, #345060)", // Steel Cyan
+  "linear-gradient(135deg, #3b3b6d, #5454a0)", // Vibrant Purple
+  "linear-gradient(135deg, #164a41, #21897e)", // Deep Green-Teal
+  "linear-gradient(135deg, #09203f, #537895)", // Dark Sky Blue
+];
+
+// **Cube Component with Mouse Follow & Drag**
+const CubeModel = ({
+  setDisplayedText,
+  setBgGradient,
+}: {
+  setDisplayedText: (text: string) => void;
+  setBgGradient: (color: string) => void;
+}) => {
   const { scene, animations } = useGLTF("/models/output.glb");
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
-  const carRef = useRef<THREE.Group>(null);
-  const [rotation, setRotation] = useState(0); // Track the rotation state
-  const [targetRotation, setTargetRotation] = useState(0); // Target rotation for smooth transition
+  const cubeRef = useRef<THREE.Group>(null);
+  const textIndexRef = useRef(0);
+  const accumulatedTime = useRef(0);
+  const textChangeInterval = 3.05; // Change text every 3.05s
 
-  // Handle Wheel Scroll Effect
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      setTargetRotation((prev) => {
-        let newRotation = prev + event.deltaY * 0.01; // Adjust sensitivity for scroll
-        return Math.max(-Math.PI, Math.min(Math.PI, newRotation)); // Limit rotation range
-      });
-    };
-
-    window.addEventListener("wheel", handleWheel);
-    return () => window.removeEventListener("wheel", handleWheel);
-  }, []);
-
-  // Smoothly interpolate the rotation to the target rotation
-  useFrame(() => {
-    setRotation((prevRotation) => {
-      return THREE.MathUtils.lerp(prevRotation, targetRotation, 0.1); // 0.1 for smoothness
-    });
-
-    if (carRef.current) {
-      carRef.current.rotation.y = rotation; // Apply the interpolated rotation on the Y-axis
-    }
-  });
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
         obj.material.needsUpdate = true;
-
-        // Convert colors correctly
+        obj.material.metalness = 0.3;
+        obj.material.roughness = 0.6;
         if (obj.material.color) {
           obj.material.color.convertSRGBToLinear();
-        }
-
-        // Fix pure white appearance
-        obj.material.metalness = 0.3; // Reduce metalness
-        obj.material.roughness = 0.6; // Increase roughness
-
-        // Ensure textures are loaded
-        if (obj.material.map) {
-          obj.material.map.needsUpdate = true;
         }
       }
     });
 
-    // Handle animations
     if (animations.length > 0 && !mixerRef.current) {
       mixerRef.current = new THREE.AnimationMixer(scene);
       animations.forEach((clip) => {
@@ -70,104 +63,123 @@ const CarModel = () => {
     }
   }, [animations, scene]);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
+    accumulatedTime.current += delta;
+
+    if (accumulatedTime.current >= textChangeInterval) {
+      accumulatedTime.current = 0;
+      textIndexRef.current = (textIndexRef.current + 1) % sentences.length;
+      setDisplayedText(sentences[textIndexRef.current]);
+      setBgGradient(gradientColors[textIndexRef.current]);
+    }
+
     if (mixerRef.current) {
-      mixerRef.current.update(delta);
+      mixerRef.current.update(delta * 0.89);
+    }
+
+    // Cube follows mouse movement
+    if (cubeRef.current) {
+      const { mouse } = state;
+      cubeRef.current.rotation.y = THREE.MathUtils.lerp(
+        cubeRef.current.rotation.y,
+        mouse.x * Math.PI,
+        0.1
+      );
+      cubeRef.current.rotation.x = THREE.MathUtils.lerp(
+        cubeRef.current.rotation.x,
+        -mouse.y * Math.PI,
+        0.1
+      );
     }
   });
 
   return (
-    <>
-      <primitive object={scene} ref={carRef} scale={3.5} />
-    </>
+    <primitive
+      object={scene}
+      ref={cubeRef}
+      scale={2.3}
+      rotation={[rotation.x, rotation.y, 0]}
+    />
   );
 };
 
-const TextCarousel = ({ onScroll }: { onScroll: (e: WheelEvent) => void }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const textArray = [
-    "This is the first text element.",
-    "Here is the second text.",
-    "Third text comes here.",
-    "This is the fourth one.",
-    "Now we have the fifth text.",
-    "Finally, the sixth text element!",
-  ];
+export default function SolBoxUI() {
+  const [displayedText, setDisplayedText] = useState(sentences[0]);
+  const [bgGradient, setBgGradient] = useState(gradientColors[0]);
+  const [textOpacity, setTextOpacity] = useState(1);
+  const [textY, setTextY] = useState(50);
 
-  const handleChange = (index: number) => {
-    setCurrentIndex(index); // Update the current carousel index
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTextOpacity(0); // Fade out
+      setTextY(50); // Move text down
 
-  const settings = {
-    selectedItem: currentIndex,
-    showThumbs: false,
-    infiniteLoop: true,
-    emulateTouch: true,
-    onChange: handleChange,
-  };
+      setTimeout(() => {
+        const nextIndex =
+          (sentences.indexOf(displayedText) + 1) % sentences.length;
+        setDisplayedText(sentences[nextIndex]);
+        setBgGradient(gradientColors[nextIndex]); // Smooth Background Transition
 
-  return (
-    <Carousel {...settings} onWheel={onScroll}>
-      {textArray.map((text, index) => (
-        <Box
-          key={index}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          h="100px"
-        >
-          <Box
-            p="4"
-            border="1px"
-            borderColor="gray.300"
-            borderRadius="lg"
-            bg="gray.100"
-          >
-            <Box fontSize="xl" color="black" fontWeight="bold">
-              {text}
-            </Box>
-          </Box>
-        </Box>
-      ))}
-    </Carousel>
-  );
-};
+        setTextOpacity(1); // Fade in
+        setTextY(0); // Move text up smoothly
+      }, 500); // Delay before changing text
+    }, 3050);
 
-export default function CarScene() {
-  const [sliderOffset, setSliderOffset] = useState(0);
-
-  // Handle wheel scroll for carousel
-  const handleScroll = (event: WheelEvent) => {
-    const isScrollDown = event.deltaY > 0;
-    const nextIndex = isScrollDown ? sliderOffset + 1 : sliderOffset - 1;
-    setSliderOffset(Math.max(0, Math.min(5, nextIndex))); // Limit index between 0 and 5 for 6 items
-  };
+    return () => clearInterval(interval);
+  }, [displayedText]);
 
   return (
     <Box
       h="100vh"
       display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
+      transition="background 1.5s ease-in-out"
+      style={{ background: bgGradient }}
     >
+      {/* Left Side: Title & Animated Text */}
       <Box
-        h="60vh"
-        w="50vw"
+        w="50%"
         display="flex"
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        p="6"
+        color="white"
       >
+        <Heading fontSize="3xl" textAlign="center" mb="4">
+          {title}
+        </Heading>
+        <Box
+          opacity={textOpacity}
+          transform={`translateY(${textY}px)`}
+          transition="opacity 0.5s ease, transform 0.5s ease"
+        >
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            textAlign="center"
+            bg="rgba(0,0,0,0.5)"
+            p="4"
+            borderRadius="lg"
+            boxShadow="xl"
+          >
+            {displayedText}
+          </Text>
+        </Box>
+      </Box>
+
+      {/* Right Side: Cube Animation with Drag & Hover */}
+      <Box w="50%" display="flex" justifyContent="center" alignItems="center">
         <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
           <ambientLight intensity={1.5} />
           <directionalLight position={[2, 5, 2]} intensity={2} />
-          <Environment preset="city" background={false} />
-
-          <CarModel />
-          <OrbitControls enableZoom={false} enablePan={false} />
+          <Environment preset="warehouse" background={false} />
+          <OrbitControls enableZoom={false} />
+          <CubeModel
+            setDisplayedText={setDisplayedText}
+            setBgGradient={setBgGradient}
+          />
         </Canvas>
       </Box>
-      <TextCarousel onScroll={handleScroll} />
     </Box>
   );
 }
