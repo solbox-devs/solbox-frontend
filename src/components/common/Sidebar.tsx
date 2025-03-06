@@ -80,6 +80,18 @@ const Sidebar = ({ onClose }: { onClose: () => void }) => {
             to="/dashboard/wallet"
             onClose={onClose}
           />
+          <SidebarItem
+            label="Top Cryptos"
+            icon={VscReferences}
+            to="/dashboard/cryptocurrencies"
+            onClose={onClose}
+          />
+          <SidebarItem
+            label="Top NFTs"
+            icon={VscReferences}
+            to="/dashboard/nfts"
+            onClose={onClose}
+          />
         </VStack>
 
         {/* Logout Button */}
