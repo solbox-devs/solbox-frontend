@@ -1,6 +1,8 @@
 import AppWalletProvider from "@/context/walletProvider";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import { Providers } from "../context/providers";
 import "./globals.css";
 
