@@ -90,7 +90,7 @@ const CubeModel: React.FC<CubeModelProps> = ({
     }
   });
 
-  return <primitive object={scene} ref={cubeRef} scale={3.5} />;
+  return <primitive object={scene} ref={cubeRef} scale={3.2} />;
 };
 
 export default function SolBoxUI() {
@@ -127,7 +127,7 @@ export default function SolBoxUI() {
         color="white"
         position="relative"
         overflow="hidden"
-        minH={{ base: "50vh", md: "auto" }}
+        minH={{ base: "35vh", md: "auto" }}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -149,7 +149,7 @@ export default function SolBoxUI() {
               <Text
                 fontSize={{ base: "2xl", md: "5xl" }}
                 fontWeight={700}
-                lineHeight="55px"
+                lineHeight={{ base: "30px", md: "55px" }}
               >
                 SolBox <br /> The Ultimate Web3 Platform on Solana
               </Text>
@@ -165,7 +165,6 @@ export default function SolBoxUI() {
         justifyContent="center"
         alignItems="center"
         minH={{ base: "50vh", md: "auto" }}
-        mt={{ base: 5, md: "0px" }}
       >
         <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
           <ambientLight intensity={1.5} />
