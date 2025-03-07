@@ -42,7 +42,7 @@ const SignupForm = () => {
 
   const { publicKey } = useWallet();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  // const searchParams: any = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
 
@@ -51,13 +51,12 @@ const SignupForm = () => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  useEffect(() => {
-    // Get referral code from URL query parameters
-    const refParam = searchParams.get("ref");
-    if (refParam) {
-      setValue("referralCode", refParam);
-    }
-  }, [searchParams, setValue]);
+  // useEffect(() => {
+  //   const refParam = searchParams.get("ref");
+  //   if (refParam) {
+  //     setValue("referralCode", refParam);
+  //   }
+  // }, [searchParams, setValue]);
 
   useEffect(() => {
     if (publicKey) {

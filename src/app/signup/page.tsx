@@ -1,3 +1,4 @@
+"use client";
 import logo from "@/assets/banner.png";
 import SignupForm from "@/components/Signup/SignupForm";
 import { Box, Image, SimpleGrid } from "@chakra-ui/react";

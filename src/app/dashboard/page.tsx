@@ -22,7 +22,7 @@ import { useCallback, useEffect, useState } from "react";
 import { BsFillRocketTakeoffFill } from "react-icons/bs";
 import { CheckIcon } from "@chakra-ui/icons"; // For the checkmark icon
 
-const PACKAGES = {
+const PACKAGES: any = {
   basic: {
     price: 0.01,
     matrixType: "1x3",
@@ -101,7 +101,7 @@ const AdminMainPage = () => {
           "confirmed"
         );
         const balanceInLamports = await connection.getBalance(publicKey);
-        const balanceInSol = balanceInLamports / LAMPORTS_PER_SOL;
+        const balanceInSol: any = balanceInLamports / LAMPORTS_PER_SOL;
         setSolBalance(balanceInSol);
       } catch (error) {
         console.error("Error fetching SOL balance:", error);
@@ -189,11 +189,11 @@ const AdminMainPage = () => {
                 </Flex>
                 <Box my={6} mb={8}>
                   <Text fontSize="2xl" fontWeight={500}>
-                    {PACKAGES[activePackage].price} SOL
+                    {PACKAGES[activePackage]?.price} SOL
                   </Text>
                   <Text fontSize="sm" fontWeight={400} color="#FAFAFA" mb={4}>
-                    Up to {PACKAGES[activePackage].maxDirectReferrals} direct
-                    connections ({PACKAGES[activePackage].matrixType} matrix
+                    Up to {PACKAGES[activePackage]?.maxDirectReferrals} direct
+                    connections ({PACKAGES[activePackage]?.matrixType} matrix
                     referral)
                   </Text>
                   {/* <Text fontSize="md" fontWeight="bold" mb={4} mt={8}>

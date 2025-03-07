@@ -188,7 +188,7 @@ const ReferralMainPage = () => {
         setReferralData(res as ApiResponse);
 
         // Process referrals to include parent information
-        const processed = res.data.referrals.map((referral) => ({
+        const processed = res.data.referrals.map((referral: any) => ({
           username: referral.username,
           walletAddress: referral.walletAddress,
           level: referral.level,

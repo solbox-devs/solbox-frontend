@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 
 const UsersTable = () => {
   const [referrals, setReferrals] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
 
   const getUserAllReferrals = async () => {
     try {
@@ -44,7 +44,7 @@ const UsersTable = () => {
     getUserAllReferrals();
   }, []);
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: any) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -80,7 +80,7 @@ const UsersTable = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {referrals.map((referral) => (
+                {referrals.map((referral: any) => (
                   <Tr key={referral._id} borderBottom="2px solid #FFFFFF1A">
                     <Td>
                       <Stack direction="row" align="center">
@@ -101,7 +101,7 @@ const UsersTable = () => {
 
           {/* Mobile View (Card Layout) */}
           <Stack spacing={4} display={{ base: "block", md: "none" }}>
-            {referrals.map((referral) => (
+            {referrals.map((referral: any) => (
               <Card
                 key={referral._id}
                 p={4}

@@ -95,7 +95,7 @@ class PackageService {
       commission: number;
       credit: number;
     }>;
-    transactionType: string;
+    transactionType: any;
   }) {
     try {
       const response = await apiClient.post(
