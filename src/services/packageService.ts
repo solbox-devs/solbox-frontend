@@ -20,6 +20,7 @@ class PackageService {
   }
 
   async getUserPackage(userId?: string) {
+    console.log("userid", userId)
     try {
       const endpoint = userId ? `/packages/${userId}` : "/packages";
       const response = await apiClient.get(endpoint);
@@ -94,6 +95,7 @@ class PackageService {
       commission: number;
       credit: number;
     }>;
+    transactionType: string;
   }) {
     try {
       const response = await apiClient.post(

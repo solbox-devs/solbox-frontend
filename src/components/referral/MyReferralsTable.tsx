@@ -72,48 +72,50 @@ const MyReferralsTable = () => {
   };
 
   return (
-    <Box w="full" p={4} borderRadius="md">
+    <Box w="full" py={4} borderRadius="md">
       {/* Desktop View */}
-      {!isMobile && (
-        <Table variant="simple">
-          <Thead>
-            <Tr borderBottom="2px solid #FFFFFF1A" bg="#FFFFFF1A">
-              <Th color="#FFFFFF">
+
+      <Table variant="simple">
+        <Thead>
+          <Tr
+            // borderBottom="1px solidrgba(147, 147, 147, 0.15)"
+            bg="#FFFFFF1A"
+          >
+            {/* <Th color="#FFFFFF">
                 <Checkbox isChecked={selectAll} onChange={handleSelectAll} />
-              </Th>
-              <Th color="#FFFFFF">Users Name</Th>
-              <Th color="#FFFFFF">Wallet Address</Th>
-              <Th color="#FFFFFF">Level</Th>
-              <Th color="#FFFFFF">Commission</Th>
-              <Th color="#FFFFFF">Referrer</Th>
-              <Th color="#FFFFFF">Total Directs</Th>
+              </Th> */}
+            <Th color="#FFFFFF">Users Name</Th>
+            <Th color="#FFFFFF">Wallet Address</Th>
+            <Th color="#FFFFFF">Level</Th>
+            <Th color="#FFFFFF">Commission</Th>
+            <Th color="#FFFFFF">Referrer</Th>
+            <Th color="#FFFFFF">Total Directs</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((user) => (
+            <Tr key={user.id} borderBottom="1px solidrgba(82, 82, 82, 0.1)">
+              <Td>
+                <Checkbox
+                  isChecked={selectedUsers.includes(user.id)}
+                  onChange={() => handleSelectUser(user.id)}
+                />
+              </Td>
+              <Td>
+                <Stack direction="row" align="center">
+                  <Avatar size="sm" src={user.avatar} name={user.name} />
+                  <Text color="#FFFFFF">{user.name}</Text>
+                </Stack>
+              </Td>
+              <Td color="#FFFFFF">{user.wallet}</Td>
+              <Td color="#FFFFFF">{user.level}</Td>
+              <Td color="#FFFFFF">{user.commission}</Td>
+              <Td color="#FFFFFF">{user.referrer}</Td>
+              <Td color="#FFFFFF">{user.totalDirects}</Td>
             </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((user) => (
-              <Tr key={user.id} borderBottom="2px solid #FFFFFF1A">
-                <Td>
-                  <Checkbox
-                    isChecked={selectedUsers.includes(user.id)}
-                    onChange={() => handleSelectUser(user.id)}
-                  />
-                </Td>
-                <Td>
-                  <Stack direction="row" align="center">
-                    <Avatar size="sm" src={user.avatar} name={user.name} />
-                    <Text color="#FFFFFF">{user.name}</Text>
-                  </Stack>
-                </Td>
-                <Td color="#FFFFFF">{user.wallet}</Td>
-                <Td color="#FFFFFF">{user.level}</Td>
-                <Td color="#FFFFFF">{user.commission}</Td>
-                <Td color="#FFFFFF">{user.referrer}</Td>
-                <Td color="#FFFFFF">{user.totalDirects}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      )}
+          ))}
+        </Tbody>
+      </Table>
 
       {/* Mobile View (Card Layout) */}
       {isMobile && (

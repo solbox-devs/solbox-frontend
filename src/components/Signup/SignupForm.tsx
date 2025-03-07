@@ -13,10 +13,9 @@ import {
   Stack,
   Text,
   useToast,
-  // Spinner,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaKey, FaUserAlt, FaWallet } from "react-icons/fa";
@@ -43,6 +42,7 @@ const SignupForm = () => {
 
   const { publicKey } = useWallet();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
 
@@ -50,6 +50,14 @@ const SignupForm = () => {
     if (!address) return "Connect Wallet";
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
+
+  useEffect(() => {
+    // Get referral code from URL query parameters
+    const refParam = searchParams.get("ref");
+    if (refParam) {
+      setValue("referralCode", refParam);
+    }
+  }, [searchParams, setValue]);
 
   useEffect(() => {
     if (publicKey) {
@@ -163,8 +171,6 @@ const SignupForm = () => {
             width="full"
             isLoading={isSubmitting}
             loadingText="Signing Up"
-
-            // rightIcon={isSubmitting ? <Spinner size="sm" /> : null}
           >
             Sign Up
           </Button>
