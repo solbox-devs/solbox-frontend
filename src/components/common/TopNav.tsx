@@ -1,6 +1,14 @@
+"use client";
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 const TopNav = () => {
+  const router = useRouter();
+
+  const launchApp = () => {
+    router.push("/connect-wallet");
+  };
+
   return (
     <Box
       position="fixed"
@@ -24,7 +32,7 @@ const TopNav = () => {
             variant="primary"
             borderRadius="3xl"
             size="sm"
-            onClick={() => alert("Launch App button clicked")}
+            onClick={launchApp}
           >
             Launch App
           </Button>
