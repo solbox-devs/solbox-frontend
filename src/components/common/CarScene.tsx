@@ -34,10 +34,7 @@ const CubeModel: React.FC<CubeModelProps> = ({
   setDisplayedText,
   setBgGradient,
 }) => {
-  const { scene, animations } = useGLTF("/models/output.glb") as unknown as {
-    scene: THREE.Group;
-    animations: THREE.AnimationClip[];
-  };
+  const { scene, animations } = useGLTF("/models/output.glb");
 
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
   const cubeRef = useRef<THREE.Object3D | null>(null);
