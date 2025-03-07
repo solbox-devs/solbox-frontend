@@ -1,11 +1,13 @@
 "use client";
-
 import { Box, Spinner, Text } from "@chakra-ui/react";
-import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+
+// Dynamically import the CubeModel component to prevent SSR
+const CubeModel = dynamic(() => import("./CubeModel"), { ssr: false });
 
 const sentences: string[] = [
   "Network — Earn instant commissions with a powerful peer-to-peer referral system",
@@ -25,95 +27,15 @@ const gradientColors: string[] = [
   "linear-gradient(135deg, #09203f, #537895)",
 ];
 
-type CubeModelProps = {
-  setDisplayedText: (text: string) => void;
-  setBgGradient: (gradient: string) => void;
-};
-
-const CubeModel: React.FC<CubeModelProps> = ({
-  setDisplayedText,
-  setBgGradient,
-}) => {
-  const { scene, animations } = useGLTF("/models/output.glb"); // No `isLoading` here
-  const [isModelLoaded, setIsModelLoaded] = useState(false); // Track if the model is loaded
-
-  const mixerRef = useRef<THREE.AnimationMixer | null>(null);
-  const cubeRef = useRef<THREE.Object3D | null>(null);
-  const textIndexRef = useRef<number>(0);
-  const accumulatedTime = useRef<number>(0);
-  const textChangeInterval = 3.05;
-
-  useEffect(() => {
-    if (!scene) return; // Ensure the scene is loaded
-
-    scene.traverse((obj) => {
-      if (obj instanceof THREE.Mesh) {
-        obj.material.needsUpdate = true;
-        obj.material.metalness = 0.3;
-        obj.material.roughness = 0.6;
-        if (obj.material.color) {
-          obj.material.color.convertSRGBToLinear();
-        }
-      }
-    });
-
-    if (animations.length > 0 && !mixerRef.current) {
-      mixerRef.current = new THREE.AnimationMixer(scene);
-      animations.forEach((clip) => {
-        const action = mixerRef.current!.clipAction(clip);
-        action.play();
-      });
-    }
-
-    setIsModelLoaded(true); // Set the model as loaded
-  }, [animations, scene]);
-
-  useFrame((state, delta) => {
-    if (!isModelLoaded) return; // Skip updates if the model is not loaded
-
-    accumulatedTime.current += delta;
-
-    if (accumulatedTime.current >= textChangeInterval) {
-      accumulatedTime.current = 0;
-      textIndexRef.current = (textIndexRef.current + 1) % sentences.length;
-      setDisplayedText(sentences[textIndexRef.current]);
-      setBgGradient(gradientColors[textIndexRef.current]);
-    }
-
-    mixerRef.current?.update(delta * 0.89);
-
-    if (cubeRef.current) {
-      const { mouse } = state;
-      cubeRef.current.rotation.y = THREE.MathUtils.lerp(
-        cubeRef.current.rotation.y,
-        mouse.x * Math.PI,
-        0.1
-      );
-      cubeRef.current.rotation.x = THREE.MathUtils.lerp(
-        cubeRef.current.rotation.x,
-        -mouse.y * Math.PI,
-        0.1
-      );
-    }
-  });
-
-  return isModelLoaded ? (
-    <primitive object={scene} ref={cubeRef} scale={3.5} />
-  ) : null; // Only render the model after it's fully loaded
-};
-
 export default function SolBoxUI() {
   const [displayedText, setDisplayedText] = useState<string>(sentences[0]);
   const [bgGradient, setBgGradient] = useState<string>(gradientColors[0]);
   const [isLoading, setIsLoading] = useState(true); // Track if the model is loading
 
-  const { scene } = useGLTF("/models/output.glb", true); // Pass `true` to trigger the loading process
-
+  // No need to load the GLTF here since CubeModel will handle the loading
   useEffect(() => {
-    if (scene) {
-      setIsLoading(false); // Set loading to false once the scene is ready
-    }
-  }, [scene]);
+    setIsLoading(false); // Set loading to false once the model is ready
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -184,7 +106,7 @@ export default function SolBoxUI() {
         alignItems="center"
         minH={{ base: "35vh", md: "auto" }}
       >
-        {isLoading ? ( // Check isLoading here to show loader while the model is loading
+        {isLoading ? (
           <Spinner size="xl" />
         ) : (
           <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
@@ -193,6 +115,8 @@ export default function SolBoxUI() {
             <Environment preset="warehouse" background={false} />
             <OrbitControls enableZoom={false} />
             <CubeModel
+              sentences={sentences}
+              gradientColors={gradientColors}
               setDisplayedText={setDisplayedText}
               setBgGradient={setBgGradient}
             />
