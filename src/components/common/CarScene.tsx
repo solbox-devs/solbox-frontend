@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Spinner, Text } from "@chakra-ui/react";
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { AnimatePresence, motion } from "framer-motion";
@@ -34,7 +34,8 @@ const CubeModel: React.FC<CubeModelProps> = ({
   setDisplayedText,
   setBgGradient,
 }) => {
-  const { scene, animations } = useGLTF("/models/output.glb");
+  const { scene, animations } = useGLTF("/models/output.glb"); // No `isLoading` here
+  const [isModelLoaded, setIsModelLoaded] = useState(false); // Track if the model is loaded
 
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
   const cubeRef = useRef<THREE.Object3D | null>(null);
@@ -43,6 +44,8 @@ const CubeModel: React.FC<CubeModelProps> = ({
   const textChangeInterval = 3.05;
 
   useEffect(() => {
+    if (!scene) return; // Ensure the scene is loaded
+
     scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh) {
         obj.material.needsUpdate = true;
@@ -61,9 +64,13 @@ const CubeModel: React.FC<CubeModelProps> = ({
         action.play();
       });
     }
+
+    setIsModelLoaded(true); // Set the model as loaded
   }, [animations, scene]);
 
   useFrame((state, delta) => {
+    if (!isModelLoaded) return; // Skip updates if the model is not loaded
+
     accumulatedTime.current += delta;
 
     if (accumulatedTime.current >= textChangeInterval) {
@@ -90,12 +97,23 @@ const CubeModel: React.FC<CubeModelProps> = ({
     }
   });
 
-  return <primitive object={scene} ref={cubeRef} scale={3.2} />;
+  return isModelLoaded ? (
+    <primitive object={scene} ref={cubeRef} scale={3.5} />
+  ) : null; // Only render the model after it's fully loaded
 };
 
 export default function SolBoxUI() {
   const [displayedText, setDisplayedText] = useState<string>(sentences[0]);
   const [bgGradient, setBgGradient] = useState<string>(gradientColors[0]);
+  const [isLoading, setIsLoading] = useState(true); // Track if the model is loading
+
+  const { scene } = useGLTF("/models/output.glb", true); // Pass `true` to trigger the loading process
+
+  useEffect(() => {
+    if (scene) {
+      setIsLoading(false); // Set loading to false once the scene is ready
+    }
+  }, [scene]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,7 +122,7 @@ export default function SolBoxUI() {
         setBgGradient(gradientColors[nextIndex]);
         return sentences[nextIndex];
       });
-    }, 2800);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, []);
@@ -127,7 +145,7 @@ export default function SolBoxUI() {
         color="white"
         position="relative"
         overflow="hidden"
-        minH={{ base: "35vh", md: "auto" }}
+        minH={{ base: "45vh", md: "auto" }}
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -136,7 +154,7 @@ export default function SolBoxUI() {
             animate={{ y: "0vh", opacity: 1 }}
             exit={{ y: "-100vh", opacity: 0 }}
             transition={{
-              y: { duration: 1.1, ease: "easeInOut" },
+              y: { duration: 0.8, ease: "easeInOut" },
               opacity: { duration: 0.4, ease: "easeInOut" },
             }}
             style={{ position: "absolute", textAlign: "center" }}
@@ -164,18 +182,22 @@ export default function SolBoxUI() {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minH={{ base: "50vh", md: "auto" }}
+        minH={{ base: "35vh", md: "auto" }}
       >
-        <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
-          <ambientLight intensity={1.5} />
-          <directionalLight position={[2, 5, 2]} intensity={2} />
-          <Environment preset="warehouse" background={false} />
-          <OrbitControls enableZoom={false} />
-          <CubeModel
-            setDisplayedText={setDisplayedText}
-            setBgGradient={setBgGradient}
-          />
-        </Canvas>
+        {isLoading ? ( // Check isLoading here to show loader while the model is loading
+          <Spinner size="xl" />
+        ) : (
+          <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
+            <ambientLight intensity={1.5} />
+            <directionalLight position={[2, 5, 2]} intensity={2} />
+            <Environment preset="warehouse" background={false} />
+            <OrbitControls enableZoom={false} />
+            <CubeModel
+              setDisplayedText={setDisplayedText}
+              setBgGradient={setBgGradient}
+            />
+          </Canvas>
+        )}
       </Box>
     </Box>
   );
