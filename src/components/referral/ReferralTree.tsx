@@ -320,7 +320,7 @@ const TreeNode = ({
           From Referrals: {formatNumber(data.referralSpent)}
         </Text>
         <Text fontSize="xs" color={getPackageColor(data.package)} mt={1}>
-          {(data.package || "BASIC").toUpperCase()}
+          {(data.package || "BASIC")?.toUpperCase()}
         </Text>
       </Box>
 
@@ -373,7 +373,7 @@ const TreeNode = ({
                   color={getPackageColor(child.package)}
                   mt={1}
                 >
-                  {(child.package || "BASIC").toUpperCase()}
+                  {(child.package || "BASIC")?.toUpperCase()}
                 </Text>
               </Box>
             </Flex>
