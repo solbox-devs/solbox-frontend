@@ -81,25 +81,28 @@ const ReferralTree = () => {
         parsedDetails.walletAddress
       );
 
-      if (res.success) {
+      if (res.success && res.data) {
+        // Add null checks for all data properties
         const rootNode: ReferralNode = {
-          name: res.data.user.username,
-          username: res.data.user.username,
-          walletAddress: res.data.user.walletAddress,
+          name: res.data.user?.username || "Unknown",
+          username: res.data.user?.username || "Unknown",
+          walletAddress: res.data.user?.walletAddress || "",
           spent: 0,
-          earnings: res.data.user.earnings,
-          referralSpent: res.data.totalEarningsFromDirects,
-          package: res.data.user.package,
-          children: res.data.directReferrals.map((referral: any) => ({
-            name: referral.username,
-            username: referral.username,
-            walletAddress: referral.walletAddress,
-            spent: 0,
-            earnings: referral.earnings,
-            referralSpent: referral.commissionFromReferral,
-            package: referral.package,
-            children: [],
-          })),
+          earnings: res.data.user?.earnings || 0,
+          referralSpent: res.data.totalEarningsFromDirects || 0,
+          package: res.data.user?.package || "basic",
+          children: Array.isArray(res.data.directReferrals)
+            ? res.data.directReferrals.map((referral: any) => ({
+                name: referral?.username || "Unknown",
+                username: referral?.username || "Unknown",
+                walletAddress: referral?.walletAddress || "",
+                spent: 0,
+                earnings: referral?.earnings || 0,
+                referralSpent: referral?.commissionFromReferral || 0,
+                package: referral?.package || "basic",
+                children: [],
+              }))
+            : [],
         };
 
         setCurrentNode(rootNode);
@@ -128,23 +131,27 @@ const ReferralTree = () => {
     try {
       setIsLoading(true);
 
-      setHistory([...history, currentNode as ReferralNode]);
+      if (currentNode) {
+        setHistory([...history, currentNode]);
+      }
 
       const res = await referralService.getDirectReferrals(node.walletAddress);
 
-      if (res.success) {
+      if (res.success && res.data) {
         const updatedNode: ReferralNode = {
           ...node,
-          children: res.data.directReferrals.map((referral: any) => ({
-            name: referral.username,
-            username: referral.username,
-            walletAddress: referral.walletAddress,
-            spent: 0,
-            earnings: referral.earnings,
-            referralSpent: referral.commissionFromReferral,
-            package: referral.package,
-            children: [],
-          })),
+          children: Array.isArray(res.data.directReferrals)
+            ? res.data.directReferrals.map((referral: any) => ({
+                name: referral?.username || "Unknown",
+                username: referral?.username || "Unknown",
+                walletAddress: referral?.walletAddress || "",
+                spent: 0,
+                earnings: referral?.earnings || 0,
+                referralSpent: referral?.commissionFromReferral || 0,
+                package: referral?.package || "basic",
+                children: [],
+              }))
+            : [],
         };
 
         setCurrentNode(updatedNode);
@@ -215,7 +222,7 @@ const ReferralTree = () => {
       minH="50vh"
     >
       <Text fontSize="xl" fontWeight="bold">
-        {currentNode.name}&apos;s Referral Tree
+        {currentNode.name || "Unknown"}&apos;s Referral Tree
       </Text>
       {history.length > 0 && (
         <Button
@@ -253,19 +260,42 @@ const TreeNode = ({
   data: ReferralNode;
   onNodeClick: (node: ReferralNode) => void;
 }) => {
-  const sortedChildren = [...data.children]
-    .sort((a, b) => b.earnings - a.earnings)
-    .slice(0, 5);
+  // Add null check for children array
+  const sortedChildren = Array.isArray(data.children)
+    ? [...data.children]
+        .sort((a, b) => (b.earnings || 0) - (a.earnings || 0))
+        .slice(0, 5)
+    : [];
 
-  const getPackageColor = (packageType: string) => {
-    switch (packageType.toLowerCase()) {
-      case "premium":
-        return "#615FFF";
-      case "pro":
-        return "#FF9900";
-      case "basic":
-      default:
-        return "#4A9D77";
+  const getPackageColor = (packageType: string | undefined | null) => {
+    // Handle null/undefined packageType
+    if (!packageType) return "#4A9D77"; // Default color for missing package
+
+    try {
+      switch (packageType.toLowerCase()) {
+        case "premium":
+          return "#615FFF";
+        case "pro":
+          return "#FF9900";
+        case "basic":
+          return "#4A9D77";
+        default:
+          return "#4A9D77";
+      }
+    } catch (error) {
+      // If toLowerCase() fails for any reason, return default color
+      console.error("Error processing package type:", error);
+      return "#4A9D77";
+    }
+  };
+
+  // Safely format numbers with fallbacks
+  const formatNumber = (value: number | undefined | null) => {
+    if (value === undefined || value === null) return "0.0000";
+    try {
+      return value.toFixed(4);
+    } catch (error) {
+      return "0.0000";
     }
   };
 
@@ -282,16 +312,15 @@ const TreeNode = ({
         boxShadow="md"
         minW="200px"
         mt="20px"
-        // borderColor={getPackageColor(data.package)}
         borderColor={"#fff"}
       >
-        <Text fontWeight="bold">{data.name}</Text>
-        <Text>Earnings: {data.earnings.toFixed(4)}</Text>
+        <Text fontWeight="bold">{data.name || "Unknown"}</Text>
+        <Text>Earnings: {formatNumber(data.earnings)}</Text>
         <Text color="orange.300">
-          From Referrals: {data.referralSpent.toFixed(4)}
+          From Referrals: {formatNumber(data.referralSpent)}
         </Text>
         <Text fontSize="xs" color={getPackageColor(data.package)} mt={1}>
-          {data.package.toUpperCase()}
+          {(data.package || "BASIC")?.toUpperCase()}
         </Text>
       </Box>
 
@@ -315,7 +344,7 @@ const TreeNode = ({
           />
           {sortedChildren.map((child) => (
             <Flex
-              key={child.walletAddress}
+              key={child.walletAddress || Math.random().toString()}
               direction="column"
               align="center"
               mb={4}
@@ -332,20 +361,19 @@ const TreeNode = ({
                 minW="180px"
                 cursor="pointer"
                 onClick={() => onNodeClick(child)}
-                // borderColor={getPackageColor(child.package)}
                 borderColor={"#fff"}
               >
-                <Text fontWeight={500}>{child.name}</Text>
-                <Text>Earnings: {child.earnings.toFixed(4)}</Text>
+                <Text fontWeight={500}>{child.name || "Unknown"}</Text>
+                <Text>Earnings: {formatNumber(child.earnings)}</Text>
                 <Text color="orange.300">
-                  From Referrals: {child.referralSpent.toFixed(4)}
+                  From Referrals: {formatNumber(child.referralSpent)}
                 </Text>
                 <Text
                   fontSize="xs"
                   color={getPackageColor(child.package)}
                   mt={1}
                 >
-                  {child.package.toUpperCase()}
+                  {(child.package || "BASIC")?.toUpperCase()}
                 </Text>
               </Box>
             </Flex>

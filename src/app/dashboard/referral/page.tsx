@@ -241,13 +241,13 @@ const ReferralMainPage = () => {
           (referral) =>
             referral.username
               .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
+              .includes(searchTerm?.toLowerCase()) ||
             referral.walletAddress
               .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
+              .includes(searchTerm?.toLowerCase()) ||
             referral.parent.username
               .toLowerCase()
-              .includes(searchTerm.toLowerCase())
+              .includes(searchTerm?.toLowerCase())
         )
         .map((referral) => ({
           username: referral.username,

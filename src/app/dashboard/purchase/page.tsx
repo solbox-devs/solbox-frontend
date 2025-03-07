@@ -507,7 +507,7 @@ const PackagePurchase = () => {
           <Box>
             <Text fontSize="lg" fontWeight={600} mb={2}>
               Your Active Package:{" "}
-              {userPackage.type.charAt(0).toUpperCase() +
+              {userPackage.type.charAt(0)?.toUpperCase() +
                 userPackage.type.slice(1)}
             </Text>
 

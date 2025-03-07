@@ -219,7 +219,7 @@ export default function EarningsDashboard() {
           commission: formatSOL(referral.commissionFromReferral),
           amount: formatUSD(referral.commissionFromReferral),
           package:
-            referral.package.charAt(0).toUpperCase() +
+            referral.package.charAt(0)?.toUpperCase() +
             referral.package.slice(1), // Capitalize first letter
           transactionId: generateTransactionId(referral.walletAddress),
         }));
