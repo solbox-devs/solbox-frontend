@@ -258,7 +258,7 @@ const TreeNode = ({
     .slice(0, 5);
 
   const getPackageColor = (packageType: string) => {
-    switch (packageType.toLowerCase()) {
+    switch (packageType?.toLowerCase()) {
       case "premium":
         return "#615FFF";
       case "pro":
