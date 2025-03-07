@@ -52,7 +52,7 @@ const EarningsChart: React.FC<EarningsChartProps> = ({ data }) => {
             color: "white",
           }}
         >
-          <p>{`${label}: $${payload[0].value.toFixed(2)}`}</p>
+          <p>{`${label}: $${payload[0].value.toFixed(4)}`}</p>
         </div>
       );
     }
@@ -81,7 +81,7 @@ const EarningsChart: React.FC<EarningsChartProps> = ({ data }) => {
         />
         <YAxis
           stroke="#F1F5F9"
-          tickFormatter={(value) => `$${value.toFixed(2)}`}
+          tickFormatter={(value) => `$${value.toFixed(4)}`}
           domain={allZero ? [0, 0.01] : [0, "auto"]}
         />
         <Tooltip content={<CustomTooltip />} />

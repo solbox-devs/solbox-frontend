@@ -91,7 +91,7 @@ const UsersTable = () => {
                     <Td color="#FFFFFF">{formatDate(referral.createdAt)}</Td>
                     <Td color="#FFFFFF">{referral?.level}</Td>
                     <Td color="#FFFFFF">
-                      {referral?.commissionFromReferral} SOL
+                      {referral?.commissionFromReferral?.toFixed(4)} SOL
                     </Td>
                   </Tr>
                 ))}

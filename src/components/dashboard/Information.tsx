@@ -48,7 +48,7 @@ const Information = ({ user, solBalance }: any) => {
       id: 3,
       icon: <FaDonate fontSize={20} />,
       title: "My Earnings",
-      amount: `$${user?.earnings || 0} `,
+      amount: `$${user?.earnings?.toFixed(4) || 0} `,
       subtitle: "Earnings",
       btnText: "46.9%",
     },
