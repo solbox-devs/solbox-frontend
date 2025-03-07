@@ -1,10 +1,7 @@
 import CurrenciesTable from "@/components/cryptocurrencies/CurrenciesTable";
-import { getCryptoCurrencies } from "@/services/coingecko";
-import { Box, Flex, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { Box, Text } from "@chakra-ui/react";
 
 const TopCryptocurrenciesPage = () => {
-
   return (
     <Box m={4}>
       <Text fontSize="xl" fontWeight={500}>

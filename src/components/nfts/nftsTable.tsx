@@ -1,6 +1,6 @@
 "use client";
 
-import { getCryptoCurrencies, getNFTCollections } from "@/services/coingecko";
+import { getNFTCollections } from "@/services/coingecko";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
@@ -64,7 +64,6 @@ const NftsTable = () => {
       console.log(data);
     };
     fetchTopNfts();
-
   }, []);
 
   return (
