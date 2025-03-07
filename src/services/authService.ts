@@ -27,6 +27,27 @@ class AuthService {
     }
   }
 
+  async getUserById(data: { id: any }) {
+    try {
+      const response = await apiClient.get(`/users/user/${data?.id}`);
+
+      return response.data;
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
+    }
+  }
+
+  async getUserByWalletAddress(data: { walletAddress: any }) {
+    try {
+      const response = await apiClient.get(`/users/user/${data?.walletAddress}`);
+
+      return response.data;
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
+    }
+  }
   async userLogin(data: { walletAddress: any }) {
     try {
       const response = await apiClient.post("/users/user/login", data);

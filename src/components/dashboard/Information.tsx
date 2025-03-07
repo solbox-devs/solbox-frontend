@@ -11,13 +11,20 @@ import { BsArrowUpRight } from "react-icons/bs";
 import { FaDonate } from "react-icons/fa";
 import { IoWalletSharp } from "react-icons/io5";
 import { SiGoogledocs } from "react-icons/si";
-const Information = () => {
+
+const packages: any = {
+  basic: 1,
+  standard: 2,
+  premium: 3,
+};
+
+const Information = ({ user, solBalance }: any) => {
   const informationCardData = [
     {
       id: 1,
       icon: <IoWalletSharp fontSize={20} />,
       title: "SOL Balance",
-      amount: "23.45 SOL",
+      amount: `${solBalance ? solBalance : "0"} SOL`,
       subtitle: null,
       btnText: null,
     },
@@ -26,7 +33,7 @@ const Information = () => {
       icon: <SiGoogledocs fontSize={20} />,
       title: "Active Package",
       amount: null,
-      subtitle: "Package : 2",
+      subtitle: `Package : ${packages[user?.package] || 0}`,
       btnText: "Upgrade",
     },
     {
@@ -34,14 +41,14 @@ const Information = () => {
       icon: <SiGoogledocs fontSize={20} />,
       title: "My Organization",
       amount: null,
-      subtitle: "People : 13",
+      subtitle: `People : ${user?.downline?.length || 0}`,
       btnText: "My Referrals",
     },
     {
       id: 3,
       icon: <FaDonate fontSize={20} />,
-      title: "My Organization",
-      amount: "$5,890",
+      title: "My Earnings",
+      amount: `$${user?.earnings || 0} `,
       subtitle: "Earnings",
       btnText: "46.9%",
     },

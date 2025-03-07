@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import type React from "react";
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -12,33 +13,56 @@ import {
   YAxis,
 } from "recharts";
 
-interface DataItem {
-  name: string;
-  earnings: number;
+interface EarningsHistoryItem {
+  month: string;
+  earnings: string;
 }
 
-const data: DataItem[] = [
-  { name: "Jan", earnings: 4000 },
-  { name: "Feb", earnings: 3000 },
-  { name: "Mar", earnings: 2000 },
-  { name: "Apr", earnings: 2780 },
-  { name: "May", earnings: 1890 },
-  { name: "Jun", earnings: 2390 },
-  { name: "Jul", earnings: 3490 },
-  { name: "Aug", earnings: 4300 },
-  { name: "Sep", earnings: 4800 },
-  { name: "Oct", earnings: 5200 },
-  { name: "Nov", earnings: 3800 },
-  { name: "Dec", earnings: 2900 },
-];
+interface EarningsChartProps {
+  data: EarningsHistoryItem[];
+}
 
-const maxEarnings = Math.max(...data.map((item) => item.earnings));
+const EarningsChart: React.FC<EarningsChartProps> = ({ data }) => {
+  const chartData = useMemo(() => {
+    return data.map((item) => ({
+      name: item.month,
+      earnings: Number.parseFloat(item.earnings),
+    }));
+  }, [data]);
 
-const EarningsChart: React.FC = () => {
+  const maxEarnings = useMemo(() => {
+    return Math.max(...chartData.map((item) => item.earnings), 0.01);
+  }, [chartData]);
+
+  // Check if all earnings are zero
+  const allZero = useMemo(() => {
+    return chartData.every((item) => item.earnings === 0);
+  }, [chartData]);
+
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            backgroundColor: "#615FFF",
+            padding: "8px",
+            borderRadius: "5px",
+            border: "1px solid #615FFF",
+            color: "white",
+          }}
+        >
+          <p>{`${label}: $${payload[0].value.toFixed(2)}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
-        data={data}
+        data={chartData}
         margin={{
           top: 5,
           right: 30,
@@ -55,21 +79,21 @@ const EarningsChart: React.FC = () => {
           scale="point"
           padding={{ left: 10, right: 10 }}
         />
-        <YAxis />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: "#615FFF", // Set your custom background color here
-            borderRadius: "5px", // Optional: Add border radius for rounded corners
-            border: "1px solid #615FFF", // Optional: Add border
-            color: "white", // Optional: Change text color
-          }}
+        <YAxis
+          stroke="#F1F5F9"
+          tickFormatter={(value) => `$${value.toFixed(2)}`}
+          domain={allZero ? [0, 0.01] : [0, "auto"]}
         />
-        {/* <Legend /> */}
+        <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="earnings" minPointSize={10} radius={5}>
-          {data.map((entry, index) => (
+          {chartData.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={entry.earnings === maxEarnings ? "#615FFF" : "#494F54"}
+              fill={
+                entry.earnings === maxEarnings && entry.earnings > 0
+                  ? "#615FFF"
+                  : "#494F54"
+              }
             />
           ))}
         </Bar>
