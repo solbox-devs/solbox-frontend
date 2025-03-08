@@ -1,7 +1,10 @@
 "use client";
-
+import {
+  formatFraction,
+  formatNumber,
+  formatReadableNumber,
+} from "@/lib/formatNumber";
 import { getCryptoCurrencies } from "@/services/coingecko";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -15,149 +18,110 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "/avatar1.png",
-    date: "2024-02-22",
-    level: "Gold",
-    commission: "$200",
-    amount: "$500",
-    package: "Pro",
-    transactionId: "TXN12345",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    avatar: "/avatar2.png",
-    date: "2024-02-21",
-    level: "Platinum",
-    commission: "$300",
-    amount: "$700",
-    package: "Elite",
-    transactionId: "TXN67890",
-  },
-  {
-    id: 3,
-    name: "Alex Brown",
-    avatar: "/avatar3.png",
-    date: "2024-02-20",
-    level: "Silver",
-    commission: "$150",
-    amount: "$400",
-    package: "Basic",
-    transactionId: "TXN11223",
-  },
-];
+import { useEffect, useState } from "react";
+interface CryptoCurrency {
+  id: string;
+  name: string;
+  image: string;
+  current_price: number;
+  atl: number;
+  price_change_24h: number;
+  market_cap_change_percentage_24h: number;
+  market_cap: number;
+  high_24h: number;
+  market_cap_rank: number;
+  circulating_supply: number;
+  total_supply?: number;
+}
 
 const CurrenciesTable = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const [topCurrency, setTopCurrency] = useState<CryptoCurrency[]>([]);
 
   useEffect(() => {
     const fetchTopCryptocurrencies = async () => {
       const data = await getCryptoCurrencies();
+      setTopCurrency(data);
       console.log(data);
     };
     fetchTopCryptocurrencies();
-
   }, []);
 
   return (
     <Box w="full" p={4} borderRadius="md">
       {/* Desktop View */}
-      {!isMobile && (
-        <Table variant="simple">
-          <Thead>
-            <Tr borderBottom="2px solid #FFFFFF1A" bg="#FFFFFF1A">
-              <Th color="#FFFFFF">Name</Th>
-              <Th color="#FFFFFF">Date</Th>
-              <Th color="#FFFFFF">Level</Th>
-              <Th color="#FFFFFF">Commission</Th>
-              <Th color="#FFFFFF">Amount</Th>
-              <Th color="#FFFFFF">Package</Th>
-              <Th color="#FFFFFF">Transaction ID</Th>
-              <Th color="#FFFFFF">Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((user) => (
-              <Tr key={user.id} borderBottom="2px solid #FFFFFF1A">
-                <Td>
-                  <Stack direction="row" align="center">
-                    <Avatar size="sm" src={user.avatar} name={user.name} />
-                    <Text color="#FFFFFF">{user.name}</Text>
-                  </Stack>
-                </Td>
-                <Td color="#FFFFFF">{user.date}</Td>
-                <Td color="#FFFFFF">{user.level}</Td>
-                <Td color="#FFFFFF">{user.commission}</Td>
-                <Td color="#FFFFFF">{user.amount}</Td>
-                <Td color="#FFFFFF">{user.package}</Td>
-                <Td color="#FFFFFF">{user.transactionId}</Td>
-                <Td>
-                  <Stack direction="row" spacing={2}>
-                    <DeleteIcon />
-                    <EditIcon />
-                  </Stack>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      )}
 
-      {/* Mobile View (Card Layout) */}
-      {isMobile && (
-        <Stack spacing={4}>
-          {data.map((user) => (
-            <Card
-              key={user.id}
-              p={4}
-              boxShadow="md"
-              borderRadius="lg"
-              bg="#1E2429"
-            >
-              <CardBody>
-                <Stack spacing={2}>
-                  <Stack direction="row" align="center">
-                    <Avatar size="md" src={user.avatar} name={user.name} />
-                    <Text fontSize="lg" color="#FFFFFF">
-                      {user.name}
-                    </Text>
-                  </Stack>
-                  <Text color="#FFFFFF">
-                    <b>Date:</b> {user.date}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Level:</b> {user.level}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Commission:</b> {user.commission}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Amount:</b> {user.amount}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Package:</b> {user.package}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Transaction ID:</b> {user.transactionId}
-                  </Text>
-                  <Stack direction="row" spacing={2} mt={2}>
-                    <DeleteIcon />
-                    <EditIcon />
-                  </Stack>
+      <Table variant="simple" display={{ base: "none", md: "block" }}>
+        <Thead>
+          <Tr borderBottom="2px solid #FFFFFF1A" bg="#FFFFFF1A">
+            <Th color="#FFFFFF">Coin</Th>
+            <Th color="#FFFFFF">Symbol</Th>
+            <Th color="#FFFFFF">Price</Th>
+            <Th color="#FFFFFF">24h</Th>
+            <Th color="#FFFFFF">Market Cap</Th>
+            <Th color="#FFFFFF">Supply</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {topCurrency?.map((user) => (
+            <Tr key={user.id} borderBottom="2px solid #FFFFFF1A">
+              <Td>
+                <Stack direction="row" align="center">
+                  <Avatar size="sm" src={user.image} name={user.name} />
+                  <Text color="#FFFFFF">{user.name}</Text>
                 </Stack>
-              </CardBody>
-            </Card>
+              </Td>
+              <Td color="#FFFFFF">{user.name}</Td>
+              <Td color="#FFFFFF">
+                $ {formatReadableNumber(user.current_price)}
+              </Td>
+              <Td color="#FFFFFF">{user.market_cap_change_percentage_24h}</Td>
+              <Td color="#FFFFFF">$ {formatNumber(user.market_cap)}</Td>
+              <Td color="#FFFFFF">
+                {formatFraction(user.circulating_supply, user?.total_supply)}
+              </Td>
+            </Tr>
           ))}
-        </Stack>
-      )}
+        </Tbody>
+      </Table>
+
+      {/* Mobile View */}
+      <Stack spacing={4} display={{ base: "block", md: "none" }}>
+        {topCurrency.map((user) => (
+          <Card
+            key={user.id}
+            p={4}
+            boxShadow="md"
+            borderRadius="lg"
+            bg="#1E2429"
+            mb={2}
+          >
+            <CardBody>
+              <Stack spacing={2}>
+                <Stack direction="row" align="center">
+                  <Avatar size="md" src={user.image} name={user.name} />
+                  <Text fontSize="lg" color="#FFFFFF">
+                    {user.name}
+                  </Text>
+                </Stack>
+                <Text color="#FFFFFF">
+                  <b>Price:</b> $ {formatReadableNumber(user.current_price)}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>24h Change:</b> {user.market_cap_change_percentage_24h}%
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Market Cap:</b> $ {formatNumber(user.market_cap)}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Supply:</b>{" "}
+                  {formatFraction(user.circulating_supply, user?.total_supply)}
+                </Text>
+              </Stack>
+            </CardBody>
+          </Card>
+        ))}
+      </Stack>
     </Box>
   );
 };

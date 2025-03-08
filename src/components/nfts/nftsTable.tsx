@@ -1,5 +1,6 @@
 "use client";
 
+import { truncateString } from "@/lib/formatNumber";
 import { getNFTCollections } from "@/services/coingecko";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
@@ -15,148 +16,96 @@ import {
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-
-const data = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "/avatar1.png",
-    date: "2024-02-22",
-    level: "Gold",
-    commission: "$200",
-    amount: "$500",
-    package: "Pro",
-    transactionId: "TXN12345",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    avatar: "/avatar2.png",
-    date: "2024-02-21",
-    level: "Platinum",
-    commission: "$300",
-    amount: "$700",
-    package: "Elite",
-    transactionId: "TXN67890",
-  },
-  {
-    id: 3,
-    name: "Alex Brown",
-    avatar: "/avatar3.png",
-    date: "2024-02-20",
-    level: "Silver",
-    commission: "$150",
-    amount: "$400",
-    package: "Basic",
-    transactionId: "TXN11223",
-  },
-];
+import { useEffect, useState } from "react";
 
 const NftsTable = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const [topNft, setTopNFT] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchTopNfts = async () => {
       const data = await getNFTCollections();
       console.log(data);
+      setTopNFT(data);
     };
     fetchTopNfts();
   }, []);
 
   return (
-    <Box w="full" p={4} borderRadius="md">
+    <Box p={4} borderRadius="md" w="100%">
       {/* Desktop View */}
-      {!isMobile && (
-        <Table variant="simple">
-          <Thead>
-            <Tr borderBottom="2px solid #FFFFFF1A" bg="#FFFFFF1A">
-              <Th color="#FFFFFF">Name</Th>
-              <Th color="#FFFFFF">Date</Th>
-              <Th color="#FFFFFF">Level</Th>
-              <Th color="#FFFFFF">Commission</Th>
-              <Th color="#FFFFFF">Amount</Th>
-              <Th color="#FFFFFF">Package</Th>
-              <Th color="#FFFFFF">Transaction ID</Th>
-              <Th color="#FFFFFF">Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((user) => (
-              <Tr key={user.id} borderBottom="2px solid #FFFFFF1A">
-                <Td>
-                  <Stack direction="row" align="center">
-                    <Avatar size="sm" src={user.avatar} name={user.name} />
-                    <Text color="#FFFFFF">{user.name}</Text>
-                  </Stack>
-                </Td>
-                <Td color="#FFFFFF">{user.date}</Td>
-                <Td color="#FFFFFF">{user.level}</Td>
-                <Td color="#FFFFFF">{user.commission}</Td>
-                <Td color="#FFFFFF">{user.amount}</Td>
-                <Td color="#FFFFFF">{user.package}</Td>
-                <Td color="#FFFFFF">{user.transactionId}</Td>
-                <Td>
-                  <Stack direction="row" spacing={2}>
-                    <DeleteIcon />
-                    <EditIcon />
-                  </Stack>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      )}
 
-      {/* Mobile View (Card Layout) */}
-      {isMobile && (
-        <Stack spacing={4}>
-          {data.map((user) => (
-            <Card
-              key={user.id}
-              p={4}
-              boxShadow="md"
-              borderRadius="lg"
-              bg="#1E2429"
-            >
-              <CardBody>
-                <Stack spacing={2}>
-                  <Stack direction="row" align="center">
-                    <Avatar size="md" src={user.avatar} name={user.name} />
-                    <Text fontSize="lg" color="#FFFFFF">
-                      {user.name}
-                    </Text>
-                  </Stack>
-                  <Text color="#FFFFFF">
-                    <b>Date:</b> {user.date}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Level:</b> {user.level}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Commission:</b> {user.commission}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Amount:</b> {user.amount}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Package:</b> {user.package}
-                  </Text>
-                  <Text color="#FFFFFF">
-                    <b>Transaction ID:</b> {user.transactionId}
-                  </Text>
-                  <Stack direction="row" spacing={2} mt={2}>
-                    <DeleteIcon />
-                    <EditIcon />
-                  </Stack>
+      <Table
+        variant="simple"
+        size={{ base: "sm", md: "md" }}
+        display={{ base: "none", md: "block" }}
+        w="100%"
+      >
+        <Thead>
+          <Tr borderBottom="2px solid #FFFFFF1A" bg="#FFFFFF1A">
+            <Th color="#FFFFFF">NFT</Th>
+            <Th color="#FFFFFF"> Symbol</Th>
+            <Th color="#FFFFFF">Contract Address</Th>
+            <Th color="#FFFFFF">Blockchain</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {topNft.map((user) => (
+            <Tr key={user.id} borderBottom="2px solid #FFFFFF1A">
+              <Td>
+                <Stack direction="row" align="center">
+                  <Avatar size="sm" src={user.avatar} name={user.name} />
+                  <Text color="#FFFFFF">{user.name}</Text>
                 </Stack>
-              </CardBody>
-            </Card>
+              </Td>
+              <Td color="#FFFFFF">{user.symbol}</Td>
+              <Td color="#FFFFFF">
+                {truncateString(user.contract_address, 6, 15)}
+              </Td>
+              <Td color="#FFFFFF">{user.asset_platform_id}</Td>
+            </Tr>
           ))}
-        </Stack>
-      )}
+        </Tbody>
+      </Table>
+
+      {/* Mobile View */}
+      <Stack spacing={4} display={{ base: "block", md: "none" }}>
+        {topNft.map((user) => (
+          <Card
+            key={user.id}
+            p={4}
+            boxShadow="md"
+            borderRadius="lg"
+            bg="#1E2429"
+            mb={2}
+          >
+            <CardBody>
+              <Stack spacing={2}>
+                <Stack direction="row" align="center">
+                  <Avatar size="md" src={user.avatar} name={user.name} />
+                  <Text fontSize="lg" color="#FFFFFF">
+                    {user.name}
+                  </Text>
+                </Stack>
+                <Text color="#FFFFFF">
+                  <b>Symbol:</b> {user.symbol}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Contract Address:</b>{" "}
+                  {truncateString(user.contract_address, 6, 15)}
+                </Text>
+                <Text color="#FFFFFF">
+                  <b>Blockchain:</b> {user.asset_platform_id}
+                </Text>
+                <Stack direction="row" spacing={2} mt={2}>
+                  <DeleteIcon />
+                  <EditIcon />
+                </Stack>
+              </Stack>
+            </CardBody>
+          </Card>
+        ))}
+      </Stack>
     </Box>
   );
 };
