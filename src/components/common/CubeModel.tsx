@@ -1,9 +1,9 @@
 "use client";
+import modelUrl from "@/assets/models/output.glb";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-
 interface CubeModelProps {
   setDisplayedText: (text: string) => void;
   setBgGradient: (color: string) => void;
@@ -17,7 +17,8 @@ const CubeModel: React.FC<CubeModelProps> = ({
   gradientColors,
   sentences,
 }) => {
-  const { scene, animations } = useGLTF("/models/output.glb"); // This will now be loaded only on the client
+  // const { scene, animations } = useGLTF("/models/output.glb");
+  const { scene, animations } = useGLTF(modelUrl); // This will now be loaded only on the client
   const [isModelLoaded, setIsModelLoaded] = useState(false); // Track if the model is loaded
 
   const mixerRef = useRef<THREE.AnimationMixer | null>(null);
