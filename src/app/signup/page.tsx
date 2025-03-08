@@ -28,7 +28,7 @@ const SignupPage = () => {
           w="100%"
           h="100vh"
         >
-          <Box w="450px" h="90vh" bg="#262D33" borderRadius="md">
+          <Box w="100%" h="90vh" bg="#262D33" borderRadius="md">
             <Image src={logo.src} alt="logo" w="100%" h="100%" />
           </Box>
         </Box>

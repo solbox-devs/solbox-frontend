@@ -53,18 +53,24 @@ const ConnectWallet = () => {
       width="100%"
       height="100vh"
     >
-      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+      <SimpleGrid columns={{ base: 1, md: 2 }}>
         <Box
-          w="350px"
-          h="400px"
-          bg="#262D33"
-          borderRadius="md"
-          p={4}
+          height="100vh"
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
-          <Box>
+          <Box
+            w="350px"
+            h="200px"
+            bg="#262D33"
+            borderRadius="md"
+            p={4}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDir="column"
+          >
             <Box textAlign="center" my={5} mb={4}>
               <Text fontSize="md" color="#9D48C7">
                 Welcome Back!
@@ -77,16 +83,16 @@ const ConnectWallet = () => {
           </Box>
         </Box>
         <Box
-          bg="#262D33"
-          borderRadius="md"
           p={2}
-          display="flex"
+          display={{ base: "none", md: "flex" }}
           alignItems="center"
           justifyContent="center"
-          w="350px"
-          h="400px"
+          w="100%"
+          h="100vh"
         >
-          <Image src={logo.src} alt="logo" h="100%" width="100%" />
+          <Box w="100%" h="90vh" bg="#262D33" borderRadius="md">
+            <Image src={logo.src} alt="logo" w="100%" h="100%" />
+          </Box>
         </Box>
       </SimpleGrid>
     </Box>

@@ -109,9 +109,9 @@ export default function SolBoxUI() {
         {isLoading ? (
           <Spinner size="xl" />
         ) : (
-          <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
+          <Canvas camera={{ position: [2, 2, 6], fov: 75 }}>
             <ambientLight intensity={1.5} />
-            <directionalLight position={[2, 5, 2]} intensity={2} />
+            <directionalLight position={[2, 4, 2]} intensity={2} />
             <Environment preset="warehouse" background={false} />
             <OrbitControls enableZoom={false} />
             <CubeModel
