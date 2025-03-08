@@ -7,6 +7,7 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { BsArrowUpRight } from "react-icons/bs";
 import { FaDonate } from "react-icons/fa";
 import { IoWalletSharp } from "react-icons/io5";
@@ -19,6 +20,7 @@ const packages: any = {
 };
 
 const Information = ({ user, solBalance }: any) => {
+  const router = useRouter();
   const informationCardData = [
     {
       id: 1,
@@ -35,6 +37,7 @@ const Information = ({ user, solBalance }: any) => {
       amount: null,
       subtitle: `Package : ${packages[user?.package] || 0}`,
       btnText: "Upgrade",
+      route: "/dashboard/purchase",
     },
     {
       id: 3,
@@ -43,6 +46,7 @@ const Information = ({ user, solBalance }: any) => {
       amount: null,
       subtitle: `People : ${user?.downline?.length || 0}`,
       btnText: "My Referrals",
+      route: "/dashboard/referral",
     },
     {
       id: 3,
@@ -51,8 +55,13 @@ const Information = ({ user, solBalance }: any) => {
       amount: `$${user?.earnings?.toFixed(4) || 0} `,
       subtitle: "Earnings",
       btnText: "46.9%",
+      route: "/dashboard/earnings",
     },
   ];
+
+  const handleRoute = (route: string) => {
+    router.push(route);
+  };
 
   return (
     <Box>
@@ -80,6 +89,7 @@ const Information = ({ user, solBalance }: any) => {
                       leftIcon={<BsArrowUpRight />}
                       size="sm"
                       fontWeight="normal"
+                      onClick={() => handleRoute(info?.route)}
                     >
                       {info.btnText}
                     </Button>

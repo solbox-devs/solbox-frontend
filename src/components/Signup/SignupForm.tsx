@@ -15,7 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaKey, FaUserAlt, FaWallet } from "react-icons/fa";
@@ -42,7 +42,7 @@ const SignupForm = () => {
 
   const { publicKey } = useWallet();
   const router = useRouter();
-  // const searchParams: any = useSearchParams();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const toast = useToast();
 
@@ -51,12 +51,15 @@ const SignupForm = () => {
     return `${address.slice(0, 4)}...${address.slice(-4)}`;
   };
 
-  // useEffect(() => {
-  //   const refParam = searchParams.get("ref");
-  //   if (refParam) {
-  //     setValue("referralCode", refParam);
-  //   }
-  // }, [searchParams, setValue]);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const refParam = searchParams.get("ref");
+      if (refParam) {
+        setValue("referralCode", refParam);
+      }
+    }
+  }, [setValue]);
 
   useEffect(() => {
     if (publicKey) {

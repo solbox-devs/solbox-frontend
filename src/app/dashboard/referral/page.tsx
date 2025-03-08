@@ -172,8 +172,6 @@ const ReferralMainPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const router = useRouter();
 
-  console.log("router", router);
-
   const getAllReferrals = async (page = 1) => {
     try {
       setLoading(true);
@@ -316,8 +314,14 @@ const ReferralMainPage = () => {
         <Text fontSize="xl" fontWeight="bold">
           My Referrals Link
         </Text>
-        <Box borderRadius="xl" p={2} bg="#262D33">
-          <Flex alignItems="center" gap={10}>
+        <Box
+          borderRadius="xl"
+          p={2}
+          bg="#262D33"
+          flex={"flex"}
+          justifyContent={"space-between"}
+        >
+          <Flex alignItems="center" gap={10} justifyContent={"space-between"}>
             <Text fontSize="md" color="white">
               {referralLink}
             </Text>

@@ -15,6 +15,7 @@ import {
   ListItem,
   ListIcon,
   Icon,
+  useToast,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
@@ -59,12 +60,13 @@ const PACKAGES: any = {
 };
 
 const AdminMainPage = () => {
+  const toast = useToast();
   const [user, setUser] = useState({});
   const [solBalance, setSolBalance] = useState(null);
-  const [activePackage, setActivePackage] = useState(null); // Store the active package key (e.g., "basic")
+  const [activePackage, setActivePackage] = useState(null);
   const { publicKey } = useWallet();
+  const [referralLink, setReferralLink] = useState("");
 
-  // Fetch user details
   const fetchUser = useCallback(async () => {
     const userDetails: any = authService.getUser();
     const parsedDetails = JSON.parse(userDetails);
@@ -72,13 +74,12 @@ const AdminMainPage = () => {
     setUser(res?.user);
   }, []);
 
-  // Fetch user package details to determine the active package
   const getUserPackageDetails = useCallback(async () => {
     const userDetails: any = authService.getUser();
     const parsedDetails = JSON.parse(userDetails);
     const res = await packageService.getUserPackage(parsedDetails?._id);
     if (res && res.packageDetails) {
-      setActivePackage(res.packageDetails.type); // Assuming response returns a key like "basic", "standard", or "premium"
+      setActivePackage(res.packageDetails.type);
     }
     console.log("Package response:", res);
   }, []);
@@ -90,6 +91,12 @@ const AdminMainPage = () => {
 
   // Fetch SOL balance
   useEffect(() => {
+    const userDetails: any = authService.getUser();
+    const parsedDetails = JSON.parse(userDetails);
+
+    setReferralLink(
+      `${window?.location?.origin}/signup?ref=${parsedDetails?.username}`
+    );
     const getSolBalance = async () => {
       if (!publicKey) {
         setSolBalance(null);
@@ -110,6 +117,17 @@ const AdminMainPage = () => {
     };
     getSolBalance();
   }, [publicKey]);
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(referralLink);
+    toast({
+      title: "Link copied",
+      description: "Referral link copied to clipboard",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
 
   return (
     <Box my={5}>
@@ -132,7 +150,7 @@ const AdminMainPage = () => {
               <Text fontSize="xl" fontWeight="bold">
                 Copy Referral Code
               </Text>
-              <Box borderRadius="md" p={2} bg="#262D33">
+              {/* <Box borderRadius="md" p={2} bg="#262D33">
                 <Flex alignItems="center" gap={10} justify="space-between">
                   <Text fontSize={{ base: "xs", md: "md" }} color="gray.100">
                     https://solbox.com/signup?code=13ncn833
@@ -144,6 +162,25 @@ const AdminMainPage = () => {
                     size="sm"
                   >
                     Copy link
+                  </Button>
+                </Flex>
+              </Box> */}
+              <Box borderRadius="xl" p={2} bg="#262D33">
+                <Flex
+                  alignItems="center"
+                  gap={10}
+                  justifyContent={"space-between"}
+                >
+                  <Text fontSize="md" color="white">
+                    {referralLink}
+                  </Text>
+                  <Button
+                    variant="secondary"
+                    borderRadius="2xl"
+                    leftIcon={<CopyIcon />}
+                    onClick={handleCopyLink}
+                  >
+                    Copy Link
                   </Button>
                 </Flex>
               </Box>
