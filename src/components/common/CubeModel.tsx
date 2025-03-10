@@ -64,7 +64,7 @@ const CubeModel: React.FC<CubeModelProps> = ({
       setBgGradient(gradientColors[textIndexRef.current]);
     }
 
-    mixerRef.current?.update(delta * 0.89);
+    mixerRef.current?.update(delta * 0.85);
 
     if (cubeRef.current) {
       const { mouse } = state;

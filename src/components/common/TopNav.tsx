@@ -1,5 +1,6 @@
 "use client";
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import logo from "@/assets/logo-1.png";
+import { Box, Button, HStack, Image } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
 const TopNav = () => {
@@ -20,19 +21,20 @@ const TopNav = () => {
       borderRadius="md"
       backdropFilter="blur(10px)" // Glassmorphism effect
       zIndex={9999}
-      boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)" // Optional: subtle shadow for the top bar
+      // boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)" // Optional: subtle shadow for the top bar
     >
       <HStack justify="space-between" align="center">
-        {/* Logo */}
-        <div style={{ width: "200px", height: "60px", objectFit: "cover" }}>
-          <img src="/SOLBOX_A5.png" />
-        </div>
+        <Box h={15} w={20}>
+          <Image src={logo.src} alt="logo" objectFit="cover" />
+        </Box>
 
         {/* Launch App Button */}
         <Box>
           <Button
             variant="primary"
             borderRadius="3xl"
+            fontSize="12px"
+            fontWeight={500}
             size="sm"
             onClick={launchApp}
           >

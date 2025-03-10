@@ -1,16 +1,15 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  const pathname = req.nextUrl.pathname;
+  // const token = req.cookies.get("token")?.value;
+  // const pathname = req.nextUrl.pathname;
 
-  const publicRoutes = ["/connect-wallet", "/signup", "/"];
+  // const publicRoutes = ["/connect-wallet", "/signup", "/", "/admin"];
 
-
-  if (!token && !publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/connect-wallet", req.url));
-  }
+  // if (!token && !publicRoutes.includes(pathname)) {
+  //   return NextResponse.redirect(new URL("/connect-wallet", req.url));
+  // }
 
   return NextResponse.next();
 }

@@ -19,12 +19,12 @@ const sentences: string[] = [
 ];
 
 const gradientColors: string[] = [
-  "linear-gradient(135deg, #1b1f3b, #3a4373)",
-  "linear-gradient(135deg, #10312b, #205a50)",
-  "linear-gradient(135deg, #1c2836, #345060)",
-  "linear-gradient(135deg, #3b3b6d, #5454a0)",
-  "linear-gradient(135deg, #164a41, #21897e)",
-  "linear-gradient(135deg, #09203f, #537895)",
+  "linear-gradient(130deg, #1b1f3b, #3a4373)",
+  "linear-gradient(130deg, #10312b, #205a50)",
+  "linear-gradient(130deg, #1c2836, #345060)",
+  "linear-gradient(130deg, #3b3b6d, #5454a0)",
+  "linear-gradient(130deg, #164a41, #21897e)",
+  "linear-gradient(130deg, #09203f, #537895)",
 ];
 
 export default function SolBoxUI() {
@@ -44,7 +44,7 @@ export default function SolBoxUI() {
         setBgGradient(gradientColors[nextIndex]);
         return sentences[nextIndex];
       });
-    }, 2500);
+    }, 2700);
 
     return () => clearInterval(interval);
   }, []);
@@ -76,7 +76,7 @@ export default function SolBoxUI() {
             animate={{ y: "0vh", opacity: 1 }}
             exit={{ y: "-100vh", opacity: 0 }}
             transition={{
-              y: { duration: 0.8, ease: "easeInOut" },
+              y: { duration: 0.9, ease: "easeInOut" },
               opacity: { duration: 0.4, ease: "easeInOut" },
             }}
             style={{ position: "absolute", textAlign: "center" }}
@@ -87,13 +87,17 @@ export default function SolBoxUI() {
               textAlign="left"
             >
               <Text
-                fontSize={{ base: "2xl", md: "5xl" }}
+                fontSize={{ base: "2xl", md: "4xl" }}
                 fontWeight={700}
-                lineHeight={{ base: "30px", md: "55px" }}
+                lineHeight={{ base: "30px", md: "45px" }}
               >
-                SolBox <br /> The Ultimate Web3 Platform on Solana
+                {displayedText}
               </Text>
-              <Text fontSize="md">{displayedText}</Text>
+              <Text fontSize="sm">
+                SolBox is the first all-in-one Web3 platform built on Solana,
+                giving you everything you need to navigate the crypto world and
+                achieve financial freedom.
+              </Text>
             </Box>
           </motion.div>
         </AnimatePresence>
