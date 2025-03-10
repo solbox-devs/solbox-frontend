@@ -15,6 +15,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@project-serum/anchor": "^0.26.0",
+    "@ramonak/react-progress-bar": "^5.3.0",
     "@react-three/drei": "^10.0.4",
     "@react-three/fiber": "^9.0.4",
     "@solana/wallet-adapter-base": "^0.9.23",

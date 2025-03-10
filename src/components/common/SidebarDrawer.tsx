@@ -55,12 +55,6 @@ const SidebarDrawer = ({ onClose, isOpen }: SidebarDrawerProps) => {
                 to="/dashboard/purchase"
                 onClose={onClose}
               />
-              <SidebarItem
-                label="Wallet"
-                icon={VscReferences}
-                to="/dashboard/wallet"
-                onClose={onClose}
-              />
             </VStack>
             <DrawerFooter>
               <Box mt="auto">

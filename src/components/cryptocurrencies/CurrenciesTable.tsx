@@ -10,6 +10,7 @@ import {
   Box,
   Card,
   CardBody,
+  Flex,
   Stack,
   Table,
   Tbody,
@@ -20,6 +21,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import ProgressBar from "@ramonak/react-progress-bar";
 interface CryptoCurrency {
   id: string;
   name: string;
@@ -33,6 +35,8 @@ interface CryptoCurrency {
   market_cap_rank: number;
   circulating_supply: number;
   total_supply?: number;
+  symbol: string;
+  max_supply: number;
 }
 
 const CurrenciesTable = () => {
@@ -68,17 +72,28 @@ const CurrenciesTable = () => {
               <Td>
                 <Stack direction="row" align="center">
                   <Avatar size="sm" src={user.image} name={user.name} />
-                  <Text color="#FFFFFF">{user.name}</Text>
+                  <Text color="#FFFFFF">{user.name.slice(0, 20)} {user.name.length > 20 ? "..." : ""}  </Text>
                 </Stack>
               </Td>
-              <Td color="#FFFFFF">{user.name}</Td>
-              <Td color="#FFFFFF">
-                $ {formatReadableNumber(user.current_price)}
+              <Td color="#FFFFFF">{user.symbol}</Td>
+              <Td color={user.market_cap_change_percentage_24h > 0 ? "#43a643" : "#d33e3e"}>
+                ${formatReadableNumber(user.current_price)}
               </Td>
-              <Td color="#FFFFFF">{user.market_cap_change_percentage_24h}</Td>
-              <Td color="#FFFFFF">$ {formatNumber(user.market_cap)}</Td>
+              <Td color={user.market_cap_change_percentage_24h > 0 ? "#43a643" : "#d33e3e"}>{user.market_cap_change_percentage_24h > 0 ? "+" : ""}{user.market_cap_change_percentage_24h.toFixed(2)}%</Td>
+              <Td color="#FFFFFF">${formatNumber(user.market_cap)}</Td>
               <Td color="#FFFFFF">
-                {formatFraction(user.circulating_supply, user?.total_supply)}
+                <div>
+                <ProgressBar 
+                  bgColor="rgb(43, 43, 98)"
+                  customLabel={""}
+                  baseBgColor="rgb(106 106 104)"
+                  isLabelVisible={false}
+                  margin="10px 0"
+                  borderRadius="30px"
+                  customLabelStyles={{ fontSize: "10px", color: "#FFFFFF" }}
+                  completed={(user?.circulating_supply || 1) * 100 / (user?.max_supply || user?.total_supply || 100)} />
+                <Text>{formatFraction(user.circulating_supply, user?.max_supply || user.total_supply)}</Text>
+                </div>
               </Td>
             </Tr>
           ))}
@@ -101,21 +116,21 @@ const CurrenciesTable = () => {
                 <Stack direction="row" align="center">
                   <Avatar size="md" src={user.image} name={user.name} />
                   <Text fontSize="lg" color="#FFFFFF">
-                    {user.name}
+                    {user.name.slice(0, 20)} {user.name.length > 20 ? "..." : ""}
                   </Text>
                 </Stack>
                 <Text color="#FFFFFF">
                   <b>Price:</b> $ {formatReadableNumber(user.current_price)}
                 </Text>
                 <Text color="#FFFFFF">
-                  <b>24h Change:</b> {user.market_cap_change_percentage_24h}%
+                  <b>24h Change:</b> {user.market_cap_change_percentage_24h > 0 ? "+" : ""}{user.market_cap_change_percentage_24h.toFixed(2)}%
                 </Text>
                 <Text color="#FFFFFF">
                   <b>Market Cap:</b> $ {formatNumber(user.market_cap)}
                 </Text>
                 <Text color="#FFFFFF">
                   <b>Supply:</b>{" "}
-                  {formatFraction(user.circulating_supply, user?.total_supply)}
+                  {formatFraction(user.circulating_supply, user?.max_supply || user?.total_supply)}
                 </Text>
               </Stack>
             </CardBody>

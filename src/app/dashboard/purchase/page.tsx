@@ -33,7 +33,7 @@ import PackageService from "../../../services/packageService";
 import { binary_to_base58 } from "base58-js";
 
 const PROGRAM_ID = new PublicKey(
-  "FqMQ5TF8M5pEWGzbj7gDx3ezJVniebaSHBmA4MexUN51"
+  "9MW3vjq3uTa2fxafJQVnGvndz1cQSp9FTCaCs9vdH2Hm"
 );
 
 const NETWORK = {
@@ -212,7 +212,7 @@ const PackagePurchase = () => {
           )
           .accounts({
             user: publicKey,
-            lpWallet: lpWallet,
+            // lpWallet: lpWallet,
             founder: founder,
             systemProgram: web3.SystemProgram.programId,
           })
