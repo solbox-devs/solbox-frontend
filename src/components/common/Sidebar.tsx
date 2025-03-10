@@ -15,6 +15,7 @@ import { FaTasks } from "react-icons/fa";
 import { MdDashboardCustomize, MdLiveHelp } from "react-icons/md";
 import { RiLogoutBoxLine, RiSettingsLine } from "react-icons/ri";
 import { VscReferences } from "react-icons/vsc";
+
 // Define TypeScript Props
 interface SidebarItemProps {
   label: string;
@@ -40,10 +41,8 @@ const Sidebar = ({ onClose }: { onClose: () => void }) => {
       >
         {/* Logo Section */}
         <Box mb="5">
-          <Flex align="center" mb="2">
-            <Text fontSize="lg" fontWeight="500" ml="2">
-              LOGO
-            </Text>
+          <Flex align="center" mb="2" width="100%" justifyContent="center" height="60px" objectFit="cover">
+            <img src={"/SOLBOX_A5.png"} alt="Solbox Logo" />
           </Flex>
           <Divider my={3} />
         </Box>

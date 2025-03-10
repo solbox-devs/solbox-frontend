@@ -24,7 +24,9 @@ const TopNav = () => {
     >
       <HStack justify="space-between" align="center">
         {/* Logo */}
-        <Text>logo</Text>
+        <div style={{ width: "200px", height: "60px", objectFit: "cover" }}>
+          <img src="/SOLBOX_A5.png" />
+        </div>
 
         {/* Launch App Button */}
         <Box>
