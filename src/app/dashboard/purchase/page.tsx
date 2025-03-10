@@ -216,6 +216,11 @@ const PackagePurchase = () => {
             founder: founder,
             systemProgram: web3.SystemProgram.programId,
           })
+          // .remainingAccounts(referrals.map((ref: { walletAddress: any }) => ({
+          //   pubkey: new PublicKey(ref.walletAddress),
+          //   isSigner: false,
+          //   isWritable: true,
+          // })))
           .instruction();
 
         const transaction = new Transaction().add(instruction);
@@ -405,6 +410,7 @@ const PackagePurchase = () => {
           {packages.map((pkg) => {
             const status = getPackageStatus(pkg.package);
             const isActive = status === "Active";
+            // const isActive = false;
             const isUpgraded = status === "Upgraded";
             const isDisabled =
               isActive || isUpgraded || isLoading || !connected || !publicKey;
